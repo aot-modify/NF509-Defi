@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | UTCC Healthcare Insurance</title>
+    <!-- Link to Google Fonts for Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img src="../images/UTCC-Official-1.png" alt="UTCC Logo" class="logo">
+            <div class="logo-text">Healthcare Insurance</div>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <h1>Register</h1>
+        <form id="registerForm">
+            <input type="text" id="name" name="name" placeholder="Full Name" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+
+            <!-- Styled Role Select Dropdown -->
+            <div class="select-wrapper">
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select your Role</option>
+                    <option value="insurance_company">Insurance Company</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <script src="../js/register.js"></script>
+</body>
+</html>

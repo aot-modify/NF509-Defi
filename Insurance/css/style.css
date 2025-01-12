@@ -1,0 +1,128 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    background-color: #0066b3; /* UTCC Blue */
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Adding shadow effect for depth */
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px; /* Rounded corners for the header */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* Adding a shadow for 3D effect */
+}
+
+.logo {
+    width: 100px;
+    margin-right: 15px;
+}
+
+/* Apply Poppins font from Google Fonts to the logo text */
+.logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 36px;
+    font-weight: 600; /* Bold font weight */
+    color: #0066b3; /* UTCC Blue */
+    letter-spacing: 2px;
+    text-transform: uppercase; /* Capitalize the text */
+}
+
+/* Main Content */
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 50px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Form Input and Buttons */
+input, select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+select {
+    background-color: #e6f4ff; /* Light blue background */
+    font-size: 16px;
+    color: #0066b3; /* UTCC Blue for text */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: border-color 0.3s ease;
+}
+
+select:focus {
+    border-color: #0066b3; /* Blue border when selected */
+    outline: none;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper::after {
+    content: '\25BC'; /* Unicode character for downwards arrow */
+    font-size: 16px;
+    color: #0066b3; /* UTCC Blue */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+button {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #0066b3; /* UTCC Blue */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #004d99; /* Darker blue when hovered */
+}
+
+a {
+    color: #0066b3; /* UTCC Blue */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
