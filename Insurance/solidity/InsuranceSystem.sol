@@ -133,7 +133,7 @@ contract InsuranceSystem {
         claimCount++;
     }
 
-    // --- Admin Functions ---
+    // --- Insurer approve Claim Functions ---
     function processClaim(uint256 claimId, bool approve) public onlyApprovedInsurer {
         Claim storage claim = claims[claimId];
         require(!claim.processed, "Claim already processed.");
