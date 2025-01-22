@@ -10,7 +10,10 @@ window.addEventListener('load', async () => {
       // ดึงบัญชีผู้ใช้
       const accounts = await web3.eth.getAccounts();
       const userAccount = accounts[0];
-      document.getElementById('eth_address').innerText = userAccount;
+      
+      // ตัดทอน Wallet Address
+      const shortAddress = formatShortAddress(userAccount);
+      document.getElementById('eth_address').innerText = shortAddress;
 
       // ดึงข้อมูลเครือข่าย
       const networkId = await web3.eth.net.getId();
@@ -711,9 +714,6 @@ window.addEventListener('load', async () => {
       console.log('Insurer Count:', insurerCount); // Debug log
       document.getElementById('insurer-count').innerText = insurerCount;
 
-      // ตัวอย่างการใช้งานเพิ่มเติม (เพิ่มได้ตามต้องการ)
-      // const otherData = await contract.methods.someOtherFunction().call();
-      // console.log('Other Data:', otherData);
     } catch (error) {
       console.error('Error connecting to Ethereum:', error);
       alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
@@ -744,4 +744,12 @@ function getNetworkName(networkId) {
     default:
       return 'Unknown';
   }
+}
+
+// ฟังก์ชันสำหรับตัดทอน Wallet Address
+function formatShortAddress(address) {
+  if (address && address.length > 10) {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  }
+  return address;
 }
