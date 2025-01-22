@@ -119,6 +119,7 @@ window.addEventListener('load', function() {
         userAccount = accounts[0];
         $("#eth_address").text(userAccount);
         reloadInfo();
+        document.getElementById('wallet_id').textContent = userAccount || 'No Wallet Connected';
       })
     })
   }
