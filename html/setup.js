@@ -134,3 +134,4 @@ window.addEventListener('load', function() {
     let url = 'https://' + network + '.etherscan.io/address/' + userAccount
     window.open(url,'_blank');
   }
+  
