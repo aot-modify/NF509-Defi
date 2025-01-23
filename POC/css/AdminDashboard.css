@@ -51,4 +51,108 @@
     transform: scale(1.05);
     background-color: #e9ecef;
   }
+
+  /* Design for hospital-count */
+  .hospital-count-display-alt {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #343a40;
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 15px;
+    padding: 20px 30px;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
   
+  /* Hover effect */
+  .hospital-count-display-alt:hover {
+    transform: scale(1.05);
+    background-color: #e9ecef;
+  }
+
+  /* Design for Policyholder-count */
+  .policyholder-count-display-alt {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #343a40;
+    background-color: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 15px;
+    padding: 20px 30px;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Hover effect */
+  .policyholder-count-display-alt:hover {
+    transform: scale(1.05);
+    background-color: #e9ecef;
+  }
+
+  /* ปรับสไตล์ของหัวตาราง */
+.custom-heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* ปรับสีพื้นสำหรับ Pending Applicants */
+.custom-heading.text-warning {
+  background-color: #f0f0f0; /* สีพื้นเรียบๆ (สีเทาอ่อน) */
+  color: #000000 !important; /* ใช้ !important เพื่อให้สีตัวอักษรเป็นสีดำ */
+}
+
+/* ปรับสีพื้นสำหรับ Approved Applicants */
+.custom-heading.text-success {
+  background-color: #f0f0f0; /* สีพื้นเรียบๆ (สีเทาอ่อน) */
+  color: #000000 !important; /* ใช้ !important เพื่อให้สีตัวอักษรเป็นสีดำ */
+}
+
+/* ปรับสไตล์ของตาราง */
+.table th {
+  background-color: #343a40; /* สีพื้นหลังหัวตาราง */
+  color: #ffffff; /* ตัวอักษรสีขาว */
+  text-align: center;
+  font-weight: bold;
+  padding: 15px 20px; /* กำหนดขนาด padding ให้เหมาะสม */
+}
+
+/* ปรับสไตล์ของแถวในตาราง */
+.table td {
+  text-align: center;
+  padding: 12px;
+}
+
+/* ปรับสีพื้นและตัวอักษรสำหรับแถวที่มีสถานะ Pending */
+.status-pending {
+  background-color: #f0f0f0; /* สีพื้นเรียบๆ */
+  color: #000000 !important; /* ใช้ !important เพื่อให้ตัวอักษรเป็นสีดำ */
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* ปรับสีพื้นและตัวอักษรสำหรับแถวที่มีสถานะ Approved */
+.status-approved {
+  background-color: #f0f0f0; /* สีพื้นเรียบๆ */
+  color: #000000 !important; /* ใช้ !important เพื่อให้ตัวอักษรเป็นสีดำ */
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* กำหนดให้ตารางที่มีความยาวเกิน 10 แถวสามารถเลื่อนขึ้นลงได้ */
+.table-responsive {
+  max-height: 300px; /* กำหนดความสูงสูงสุดที่ตารางสามารถแสดงได้ */
+  overflow-y: auto;  /* เปิดใช้การเลื่อนขึ้นลงในแนวตั้ง */
+  display: block;    /* ทำให้ตารางสามารถเลื่อนแบบ block-level */
+}

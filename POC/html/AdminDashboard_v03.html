@@ -99,9 +99,64 @@
           </div>
       
           <div id="kyc-section" class="content-section d-none">
-            <h3>KYC Management</h3>
-            <p>Manage Know Your Customer (KYC) details here.</p>
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 Table layout with left and right columns -->
+            <div class="row">
+              <!-- Pending KYC Table (Left) -->
+              <div class="col-lg-6 mb-4 mb-lg-0">
+                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-pending-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Approved KYC Table (Right) -->
+              <div class="col-lg-6">
+                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-approved-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div id="policies-section" class="content-section d-none">
             <h3>Policies</h3>
             <p>View and manage policies here.</p>
@@ -113,7 +168,6 @@
         </div>
       </div>
       
-
     <script src="../js/AdminDashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>

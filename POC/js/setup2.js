@@ -714,6 +714,16 @@ window.addEventListener('load', async () => {
       console.log('Insurer Count:', insurerCount); // Debug log
       document.getElementById('insurer-count').innerText = insurerCount;
 
+      // ดึงจำนวน Hospital จาก Smart Contract
+      const hospitalCount = await contract.methods.getHospitalCount().call();
+      console.log('Hospital Count:', hospitalCount); // Debug log
+      document.getElementById('hospital-count').innerText = hospitalCount;
+
+      // ดึงจำนวน policyholder จาก Smart Contract
+      const policyholderCount = await contract.methods.getPolicyholderCount().call();
+      console.log('policyholder Count:', policyholderCount); // Debug log
+      document.getElementById('policyholder-count').innerText = policyholderCount;
+
     } catch (error) {
       console.error('Error connecting to Ethereum:', error);
       alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
