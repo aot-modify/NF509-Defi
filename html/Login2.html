@@ -25,13 +25,18 @@
       </div>
     </div>
     
+    <!-- <button type="Login" class="btn btn-primary text-center" style="width: 100px;" 
+     onclick="getInsurerData()">
+      Test
+    </button> -->
 
     <div class="container d-flex justify-content-center align-items-center vh-100">
-      <div class="row p-3 border rounded-5 bg-primary text-bg-primary" style="width: 450px;">
+      <div class="row p-3 border rounded-5 bg-primary text-bg-primary shadow" style="width: 450px;">
         <div class="row-fluid text-center mt-2 fs-4">Greeting!!</div>
         <div class="row-fluid mt-5 text-start">Login</div>
         <div class="mt-2" style="font-size: 14px;">
-          <label for="walletID" class="form-lable">Your wallet ID:</label>
+          
+          <label for="walletID" class="form-lable shadow">Your wallet ID:</label>
           <div class="input-group text-start">
             <span class="input-group-text" id="eth_address" style="font-size: 14px; width: 450px;">
               <a href="javascript:openUserAddressOnEtherScan();" target="_blank">
@@ -39,18 +44,20 @@
               </a>
             </span>
           </div>
+
           <label for="ID" class="form-lable mt-2">User Thai citizen ID:</label>
           <div class="input-group">
-            <span class="input-group-text" id="walletID" style="font-size: 14px; width: 450px;">
-            citizen ID
-            </span>
+            <input type="text" id="citizenID" class="form-control shadow" style="font-size: 14px; width: 450px;" placeholder="Citizen ID">
           </div>
+          
         </div>
         <div class="row-fluid m-2 fw-bold text-center" style="color: red;">
           <span id="warning"></span>
         </div>
         <div class="row d-flex justify-content-center my-2">
-          <button type="Login" class="btn btn-light" style="width: 100px;">Login</button>
+          <button type="Login" class="btn btn-light shadow" style="width: 100px;" onclick="logIn()">
+            Login
+          </button>
         </div>
         <div class="row footer-text mb-2">
           <a href="#" class="text-bg-primary text-center" style="font-size: 10px;">Already have a policy? click here to buy</a>
