@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/AdminDashboard.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/web3.js"></script> 
+    <script src="../js/setup2.js"></script>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="row bg-primary p-3 text-bg-primary fs-3 shadow">
+        <div class="col-4 text-start">
+          <span id="eth_network"></span> network
+        </div>
+        <div class="col-4 text-center">
+          Welcome!!
+        </div>
+        <div class="col-4 text-end" style="height: 45px;">
+          <img src="https://img.icons8.com/?size=100&id=ZrksPzH5Aadq&format=png&color=000000" alt="userAvatar" height="45px;">
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-2 bg-secondary-subtle p-3 vh-100 shadow">
+          <div class="text-center">
+            <img src="../images/admin.jpg" alt="userProfile" width="150px;" class="mt-5">
+          </div>
+          <div class="text-center fw-bold fs-4 mt-3">Administrator</div>
+          <div class="row fw-bold fs-6 mt-3 d-flex justify-content-center text-center" style="word-wrap: break-word;">
+            Wallet ID: <span id="eth_address">Connecting...</span>
+          </div>
+      
+          <!-- Menu -->
+          <div class="mt-4">
+            <div class="menu-header">
+              <i class="fas fa-bars"></i> Menu
+            </div>
+            <ul class="list-unstyled mt-3">
+              <li class="menu-item" data-section="dashboard" data-title="Dashboard Overview">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </li>
+              <li>
+                <div class="dropdown">
+                  <a
+                    class="dropdown-toggle text-decoration-none text-dark menu-item"
+                    href="#"
+                    role="button"
+                    id="kycDropdownMenu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-user-check"></i> KYC Management <i class="fas fa-caret-down"></i> <!-- ลูกศร -->
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="kycDropdownMenu">
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="insurance" data-title="Insurance KYC">
+                        <i class="fas fa-shield-alt"></i> Insurance
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="hospital" data-title="Hospital KYC">
+                        <i class="fas fa-hospital"></i> Hospital
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="policyholder" data-title="Policyholder KYC">
+                        <i class="fas fa-user"></i> Policyholder
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="menu-item" data-section="policies" data-title="Policies Overview">
+                <i class="fas fa-file-contract"></i> Policies
+              </li>
+              <li class="menu-item" data-section="reports" data-title="Reports Overview">
+                <i class="fas fa-chart-bar"></i> Reports
+              </li>
+            </ul>
+          </div>
+        </div>
+      
+        <!-- Main Content -->
+        <div class="col-10">
+          <div id="main-content">
+            <h2 id="main-title" class="fw-bold p-4">Dashboard Overview</h2>
+            <div id="dashboard-section" class="content-section">
+              <div class="row justify-content-center">
+                <!-- Card for Total Insurance Providers -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Insurance Providers</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="insurer-count" class="insurer-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Card for Total Hospitals -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Hospitals</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="hospital-count" class="hospital-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Card for Total Policyholders -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Policyholders</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="policyholder-count" class="policyholder-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <!-- Insurance KYC Section -->
+          <div id="insurance-section" class="content-section d-none">
+            <h4>Insurance KYC</h4>
+
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-insurance" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-insurance">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 Table layout with left and right columns -->
+            <div class="row">
+              <!-- Pending KYC Table (Left) -->
+              <div class="col-lg-6 mb-4 mb-lg-0">
+                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-pending-insurance-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Approved KYC Table (Right) -->
+              <div class="col-lg-6">
+                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-approved-insurance-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hospital KYC Section -->
+          <div id="hospital-section" class="content-section d-none">
+            <h4>Hospital KYC</h4>
+
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-hospital" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-hospital">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 Table layout with left and right columns -->
+            <div class="row">
+              <!-- Pending KYC Table (Left) -->
+              <div class="col-lg-6 mb-4 mb-lg-0">
+                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-pending-hospital-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Approved KYC Table (Right) -->
+              <div class="col-lg-6">
+                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-approved-hospital-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Policyholder KYC Section -->
+          <div id="policyholder-section" class="content-section d-none">
+            <h4>Policyholder KYC</h4>
+
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-policyholder" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-policyholder">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2 Table layout with left and right columns -->
+            <div class="row">
+              <!-- Pending KYC Table (Left) -->
+              <div class="col-lg-6 mb-4 mb-lg-0">
+                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-pending-policyholder-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Approved KYC Table (Right) -->
+              <div class="col-lg-6">
+                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="kyc-approved-policyholder-table-body">
+                      <tr>
+                        <td colspan="4" class="text-center">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      
+      <script src="../js/AdminDashboard.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
