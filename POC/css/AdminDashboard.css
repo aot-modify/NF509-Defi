@@ -30,41 +30,52 @@
     margin-right: 10px;
   }
 
-  /* ปรับแต่ง dropdown */
-  .dropdown-menu {
-    border-radius: 0.5rem; /* ทำให้มุมมน */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้เมนู */
-    transition: opacity 0.3s ease; /* การเปลี่ยนแปลงการแสดงผล */
-    display: none; /* ซ่อน dropdown เมื่อลากเมาส์ออก */
-  }
+/* ปรับแต่ง dropdown */
+.dropdown-menu {
+  border-radius: 0.5rem; /* ทำให้มุมมน */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้เมนู */
+  transition: opacity 0.3s ease; /* การเปลี่ยนแปลงการแสดงผล */
+  display: none; /* ซ่อน dropdown เมื่อลากเมาส์ออก */
+}
 
-  .dropdown-item {
-    padding: 10px 20px; /* เพิ่มระยะห่างของ item */
-    font-size: 16px; /* ขนาดตัวอักษร */
-  }
+.dropdown-item {
+  padding: 10px 20px; /* เพิ่มระยะห่างของ item */
+  font-size: 16px; /* ขนาดตัวอักษร */
+}
 
-  .dropdown-item:hover {
-    background-color: #00aaff; /* สีพื้นหลังเมื่อ hover */
-    color: white; /* ตัวอักษรสีขาว */
-    border-radius: 0.25rem; /* มุมมนเมื่อ hover */
-  }
+.dropdown-item:hover {
+  background-color: #00aaff; /* สีพื้นหลังเมื่อ hover */
+  color: white; /* ตัวอักษรสีขาว */
+  border-radius: 0.25rem; /* มุมมนเมื่อ hover */
+}
 
-  /* ทำให้ dropdown แสดงเมื่อ hover */
-  .dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1; /* ทำให้เมนูปรากฏขึ้น */
-  }
+/* ทำให้ dropdown แสดงเมื่อ hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1; /* ทำให้เมนูปรากฏขึ้น */
+}
 
-  /* เปลี่ยนสีให้เมนูที่ถูกเลือก */
-  .dropdown-item.active {
-    background-color: #006699;
-    color: white;
-  }
+/* เปลี่ยนสีให้เมนูที่ถูกเลือก */
+.dropdown-item.active {
+  background-color: #006699;
+  color: white;
+}
 
-  /* ซ่อนปุ่ม arrow ของ dropdown */
-  .dropdown-toggle::after {
-    display: none;
-  }
+/* ซ่อนปุ่ม arrow ของ dropdown */
+.dropdown-toggle::after {
+  display: none;
+}
+
+/* ปรับแต่ง dropdown-toggle (เมนู KYC Management) */
+a.dropdown-toggle {
+  display: flex;
+  align-items: center;
+}
+
+a.dropdown-toggle i.fas.fa-caret-down {
+  margin-left: 8px; /* เพิ่มระยะห่างระหว่างข้อความและลูกศร */
+}
+
   
   /* Design for insurer-count */
   .insurer-count-display-alt {
