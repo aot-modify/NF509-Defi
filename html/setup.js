@@ -295,24 +295,59 @@ function getContract() {
   return contract;
 }
 
-// async function getInsurerData() {
+async function getInsurerData() {
+  let contract = getContract();
+  const wallet = userAccount;
+  if (!web3.utils.isAddress(wallet)) {
+    alert("Invalid wallet address." + wallet);
+  }
+  try {
+    const data = await contract.methods.insurers(wallet).call();
+    const userName = data.name;
+    const userID = data.idNumber;
+    const userContact = data.contact;
+    const userWallet = data.wallet;
+    const userRegistered = data.isRegistered;
+    const userApproved = data.isApproved;
+    alert("Name: " + userName + "\nID: " + userID + "\nContact: " + userContact + "\nWallet: " + userWallet + "\nRegistered: " + userRegistered + "\nApproved: " + userApproved);
+  } catch (error) {
+      console.error(error);
+      alert("Error fetching data. Check the console for details.");
+  }
+}
+
+// async function logIn() {
 //   let contract = getContract();
 //   const wallet = userAccount;
+//   const citizenID = document.getElementById("citizenID").value;
+
 //   if (!web3.utils.isAddress(wallet)) {
 //     alert("Invalid wallet address." + wallet);
-//   }
+//   } else if (wallet === "0x5674866dB643741c3e8Df8E528B2f6638c706B22") {
+//     window.location.href = "AdminDashboard_v02.html";
+//   } 
 //   try {
-//     const data = await contract.methods.insurers(wallet).call();
-//     const userName = data.name;
-//     const userID = data.idNumber;
-//     const userContact = data.contact;
-//     const userWallet = data.wallet;
-//     const userRegistered = data.isRegistered;
-//     const userApproved = data.isApproved;
-//     alert("Name: " + userName + "\nID: " + userID + "\nContact: " + userContact + "\nWallet: " + userWallet + "\nRegistered: " + userRegistered + "\nApproved: " + userApproved);
+//     const dataInsurers = await contract.methods.insurers(wallet).call();
+//     const userIDInsurers = dataInsurers.idNumber;
+//     const dataHospitals = await contract.methods.hospitals(wallet).call();
+//     const userIDHospitals = dataHospitals.idNumber;
+//     const dataPolicyholders = await contract.methods.policyholders(wallet).call();
+//     const userIDPolicyholders = dataPolicyholders.idNumber;
+//     if (citizenID === userIDInsurers && dataInsurers.isRegistered) {
+//       alert("Login successful.");
+//       window.location.href = "InsuredDashboard.html";
+//     } else if (citizenID === userIDHospitals && dataHospitals.isRegistered) {
+//       alert("Login successful.");
+//       window.location.href = "HospitalDashboard.html";
+//     } else if (citizenID === userIDPolicyholders && dataPolicyholders.isRegistered) {
+//       alert("Login successful.");
+//       window.location.href = "PolicyholdersDashboard.html";
+//     } else {
+//       alert("Login failed.\nPlease check your Citizen ID.");
+//     }
 //   } catch (error) {
-//       console.error(error);
-//       alert("Error fetching data. Check the console for details.");
+//     console.error(error);
+//     alert("Error fetching data. Check the console for details.")
 //   }
 // }
 
@@ -320,17 +355,28 @@ async function logIn() {
   let contract = getContract();
   const wallet = userAccount;
   const citizenID = document.getElementById("citizenID").value;
+  const userTypes = ['insurers', 'hospitals', 'policyholders'];
+  let loginSuccessful = false;
+
+
+
   if (!web3.utils.isAddress(wallet)) {
     alert("Invalid wallet address." + wallet);
-  }
+  } else if (wallet === "0x5674866dB643741c3e8Df8E528B2f6638c706B22") {
+    window.location.href = "AdminDashboard_v02.html";
+  } 
   try {
-    const data = await contract.methods.insurers(wallet).call();
-    const userID = data.idNumber;
-    if (citizenID === userID) {
-      alert("Login successful.");
-      window.location.href = "InsuredDashboard.html";
-    } else {
-      alert("Login failed.\nPlease check your Citizen ID.");
+    for (const type of userTypes) {
+      const data = await contract.methods[type](wallet).call();
+      if (citizenID === data.idNumber && data.isRegistered) {
+        alert("Login successful.");
+        window.location.href = `${type.charAt(0).toUpperCase() + type.slice(1)}Dashboard.html`;
+        loginSuccessful = true;
+        break;
+      }
+    }
+    if (!loginSuccessful) {
+      alert("Login failed.\nPlease check your Citizen ID and membership.");
     }
   } catch (error) {
     console.error(error);
