@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Users</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+  <h1>Insurance System Users</h1>
+  <h2>Insurers</h2>
+  <table id="insurersTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>ID Number</th>
+        <th>Contact</th>
+        <th>Wallet</th>
+        <th>Registered</th>
+        <th>Approved</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Hospitals</h2>
+  <table id="hospitalsTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>ID Number</th>
+        <th>Contact</th>
+        <th>Wallet</th>
+        <th>Registered</th>
+        <th>Approved</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Policyholders</h2>
+  <table id="policyholdersTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>ID Number</th>
+        <th>Contact</th>
+        <th>Wallet</th>
+        <th>Registered</th>
+        <th>Approved</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const contractAddress = "0xYourContractAddressHere"; // Address ของ Contract
+    const abi = [/* ใส่ ABI ของ Contract */]; // ABI ของ Contract
+
+    async function loadUsers() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(contractAddress, abi, provider);
+
+      try {
+        // Fetch all insurers
+        const insurers = await contract.getAllInsurers();
+        populateTable('insurersTable', insurers);
+
+        // Fetch all hospitals
+        const hospitals = await contract.getAllHospitals();
+        populateTable('hospitalsTable', hospitals);
+
+        // Fetch all policyholders
+        const policyholders = await contract.getAllPolicyholders();
+        populateTable('policyholdersTable', policyholders);
+
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    }
+
+    function populateTable(tableId, users) {
+      const tableBody = document.querySelector(`#${tableId} tbody`);
+      tableBody.innerHTML = ''; // Clear existing rows
+
+      users.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${user.name}</td>
+          <td>${user.idNumber}</td>
+          <td>${user.contact}</td>
+          <td>${user.wallet}</td>
+          <td>${user.isRegistered ? 'Yes' : 'No'}</td>
+          <td>${user.isApproved ? 'Yes' : 'No'}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Load users when the page loads
+    window.addEventListener('load', loadUsers);
+  </script>
+</body>
+</html>

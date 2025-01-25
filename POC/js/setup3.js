@@ -1,44 +1,33 @@
 // Web3 and Smart Contract integration
 window.addEventListener('load', async () => {
-  // Disclaimer message
-  const disclaimer = `
-    Please take note that this is a beta version feature and is provided on an "as is" and "as available" basis.
-    Etherscan does not give any warranties and will not be liable for any loss, direct or indirect through continued use of this feature.
-  `;
-
-  // Show disclaimer and wait for user confirmation
-  const userAccepted = window.confirm(disclaimer);
-  if (!userAccepted) {
-    alert('You must accept the disclaimer to proceed.');
-    return; // Exit if user clicks "Cancel"
-  }
-
-  // Check if Web3 or Ethereum object is available
+  // ตรวจสอบว่า Web3 หรือ Ethereum object ถูก inject หรือไม่
   if (typeof window.ethereum !== 'undefined') {
     const web3 = new Web3(window.ethereum);
     try {
-      // Request access to accounts
+      // ขอสิทธิ์เข้าถึงบัญชีผู้ใช้
       await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-      // Fetch accounts and display short address
+      // ดึงบัญชีผู้ใช้
       const accounts = await web3.eth.getAccounts();
       const userAccount = accounts[0];
-      console.log(`Connected Wallet: ${formatShortAddress(userAccount)}`);
+      
+      // ตัดทอน Wallet Address
+      const shortAddress = formatShortAddress(userAccount);
+      document.getElementById('eth_address').innerText = shortAddress;
 
-      // Fetch network information
+      // ดึงข้อมูลเครือข่าย
       const networkId = await web3.eth.net.getId();
       const networkName = getNetworkName(networkId);
-      console.log(`Connected Network: ${networkName}`);
+      document.getElementById('eth_network').innerText = networkName;
 
-      // Alert for unsupported networks
+      // เพิ่มข้อความแจ้งเตือนสำหรับเครือข่ายที่ไม่รองรับ
       if (networkName === 'Unknown') {
         alert('You are connected to an unsupported network. Please switch to a supported network.');
-        return;
       }
 
-      // Configure Smart Contract
-      const contractAddress = '0xE4c0F88FC5E8712B78847E28cf2fA2486a31b805'; // Replace with your contract address
-      const contractABI =[
+      // กำหนดค่า Smart Contract
+      const contractAddress = '0x5699b7fCFd6Dc71F8aF5343bAd5c770C20dc4aB0';
+      const contractABI = [
         {
           "inputs": [],
           "stateMutability": "nonpayable",
@@ -62,6 +51,45 @@ window.addEventListener('load', async () => {
           ],
           "name": "Approved",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "hospitalAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "insurerAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "policyholderAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approvePolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "anonymous": false,
@@ -106,6 +134,29 @@ window.addEventListener('load', async () => {
           ],
           "name": "ClaimSubmitted",
           "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "policyName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "terms",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "premium",
+              "type": "uint256"
+            }
+          ],
+          "name": "createPolicy",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         },
         {
           "anonymous": false,
@@ -177,6 +228,121 @@ window.addEventListener('load', async () => {
           "type": "event"
         },
         {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "claimId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "approve",
+              "type": "bool"
+            }
+          ],
+          "name": "processClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            }
+          ],
+          "name": "purchasePolicy",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsPolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "anonymous": false,
           "inputs": [
             {
@@ -196,6 +362,29 @@ window.addEventListener('load', async () => {
           "type": "event"
         },
         {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "submitClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "admin",
           "outputs": [
@@ -206,45 +395,6 @@ window.addEventListener('load', async () => {
             }
           ],
           "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "hospitalAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approveHospital",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "insurerAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approveInsurer",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "policyholderAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approvePolicyholder",
-          "outputs": [],
-          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -429,6 +579,45 @@ window.addEventListener('load', async () => {
               "internalType": "struct InsuranceSystem.User[]",
               "name": "",
               "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getHospitalCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getInsurerCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPolicyholderCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
             }
           ],
           "stateMutability": "view",
@@ -651,171 +840,37 @@ window.addEventListener('load', async () => {
           ],
           "stateMutability": "view",
           "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsHospital",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsInsurer",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsPolicyholder",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "registeredHospitals",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "registeredInsurers",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "name": "registeredPolicyholders",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
         }
-      ]; // Replace with your contract ABI
+      ];
+      
       const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-      // Fetch and display Smart Contract data
-      const insurerCount = await contract.methods.insurerCount().call();
-      console.log(`Insurer Count: ${insurerCount}`);
+      // ดึงจำนวน Insurer จาก Smart Contract
+      const insurerCount = await contract.methods.getInsurerCount().call();
+      console.log('Insurer Count:', insurerCount); // Debug log
+      document.getElementById('insurer-count').innerText = insurerCount;
 
-      const hospitalCount = await contract.methods.hospitalCount().call();
-      console.log(`Hospital Count: ${hospitalCount}`);
+      // ดึงจำนวน Hospital จาก Smart Contract
+      const hospitalCount = await contract.methods.getHospitalCount().call();
+      console.log('Hospital Count:', hospitalCount); // Debug log
+      document.getElementById('hospital-count').innerText = hospitalCount;
 
-      const policyholderCount = await contract.methods.policyholderCount().call();
-      console.log(`Policyholder Count: ${policyholderCount}`);
+      // ดึงจำนวน policyholder จาก Smart Contract
+      const policyholderCount = await contract.methods.getPolicyholderCount().call();
+      console.log('policyholder Count:', policyholderCount); // Debug log
+      document.getElementById('policyholder-count').innerText = policyholderCount;
 
     } catch (error) {
       console.error('Error connecting to Ethereum:', error);
-      alert('Failed to connect to Ethereum. Please check your wallet and network settings.\nError: ' + error.message);
+      alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
     }
   } else {
+    // แจ้งเตือนผู้ใช้ให้ติดตั้ง MetaMask หรือ Ethereum wallet
     alert('Please install MetaMask or another Ethereum wallet extension.');
   }
 });
 
-// Helper function to map network ID to network name
+// ฟังก์ชันสำหรับดึงชื่อเครือข่ายตาม Network ID
 function getNetworkName(networkId) {
   switch (networkId) {
     case 1:
@@ -837,7 +892,7 @@ function getNetworkName(networkId) {
   }
 }
 
-// Helper function to shorten Ethereum address
+// ฟังก์ชันสำหรับตัดทอน Wallet Address
 function formatShortAddress(address) {
   if (address && address.length > 10) {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
