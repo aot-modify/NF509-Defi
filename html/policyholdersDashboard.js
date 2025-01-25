@@ -10,6 +10,18 @@ var useridNumber ="";
 var userContact ="";
 var userWallet ="";
 
+var userpolicyName ="";
+var userterms ="";
+var userpremium ="";
+var userinsurer ="";
+
+// let claimsData = [];
+// var Hospital ="";
+// var Amount = "";
+// var Reason = "";
+// var Approved = "";
+// var Processed = "";
+
 let abi = [
   {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
   {
@@ -304,7 +316,7 @@ function getContract() {
 //     alert(userAccount);
 // }
 
-async function getInsurer() {
+async function getPolicyholder() {
   let contract = getContract();
   const wallet = userAccount;
 
@@ -333,6 +345,105 @@ async function getInsurer() {
   }
 }
 
+async function getPolicyholders() {
+  let contract = getContract();
+  const wallet = userAccount;
+
+  if (!wallet) {
+    alert("User account not found. Please make sure you are logged in.");
+    return;
+  }
+
+  try {
+    const dataPolicyholders = await contract.methods.policyholders(wallet).call();
+    // alert(wallet);
+    userName = dataPolicyholders.name;
+    useridNumber = dataPolicyholders.idNumber;
+    userContact = dataPolicyholders.contact;
+    userWallet = dataPolicyholders.wallet;
+    // alert("Name: " + userName + "\nID Number: " + useridNumber + "\nContact: " + userContact + "\nWallet: " + userWallet);
+    $("#userName").text(userName);
+    $("#userID").text(useridNumber);
+    $("#userContact").text(userContact);
+    const shortenedWalletID = `${userWallet.slice(0, 8)}...${userWallet.slice(-8)}`; // Shorten text
+    $("#userWallet").text(shortenedWalletID);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error fetching data. Check the console for details.")
+  }
+}
+
+async function getPolicyholdersPolicy() {
+  let contract = getContract();
+  const wallet = userAccount;
+
+  if (!wallet) {
+    alert("User account not found. Please make sure you are logged in.");
+    return;
+  }
+
+  try {
+    const dataPolicy = await contract.methods.policies(wallet).call();
+    // alert(wallet);
+    userpolicyName = dataPolicy.policyName;
+    userterms = dataPolicy.terms;
+    userpremium = dataPolicy.premium;
+    userinsurer = dataPolicy.insurer;
+    // alert("Policy Name: " + userpolicyName + "\nTerms: " + userterms + "\nPremium: " + userpremium + "\nInsurer: " + userinsurer);
+    $("#userpolicyName").text(userpolicyName);
+    $("#userterms").text(userterms);
+    $("#userpremium").text(userpremium);
+    $("#userinsurer").text(userinsurer);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error fetching data. Check the console for details.")
+  }
+}
+
+async function fetchClaimsData() {
+  let contract = getContract(); // Ensure you have a function to get the contract instance
+  let claimsData = [];
+  for (let i = 1; i <= 10; i++) {
+    try {
+      const dataInsurers = await contract.methods.claims(i).call();
+      let claim = {
+        id: i,
+        Hospital: `${dataInsurers.hospital.slice(0, 8)}...${dataInsurers.hospital.slice(-8)}`,
+        // Hospital: dataInsurers.hospital,
+        Amount: dataInsurers.amount,
+        Reason: dataInsurers.reason,
+        Approved: dataInsurers.approved,
+        Processed: dataInsurers.processed
+      };
+      claimsData.push(claim);
+    } 
+    catch (error) {
+      console.error(`Error fetching data for claim ID ${i}:`, error);
+      alert("Error fetching data. Check the console for details.")
+    }
+  }
+  // Display the fetched data or process it as needed
+  displayClaimsData(claimsData); // Example function to display data
+}
+
+function displayClaimsData(claimsData) {
+  const claimsList = document.getElementById('claimsTable');
+  claimsData.forEach(claim => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <th scope="row">${claim.id}</th>
+      <td>${claim.Hospital}</td>
+      <td>${claim.Amount}</td>
+      <td>${claim.Reason}</td>
+      <td>${claim.Approved}</td>
+      <td>${claim.Processed}</td>
+    `;
+    claimsTable.appendChild(row);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     if (window.ethereum) {
       web3 = new Web3(ethereum);
@@ -340,8 +451,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         await ethereum.enable();
         const accounts = await web3.eth.getAccounts();
         userAccount = accounts[0];
-        getInsurer();
+        getPolicyholders();
         getBalance();
+        getPolicyholdersPolicy();
+        fetchClaimsData();
       } catch (err) {
         console.error(err);
       }
@@ -349,8 +462,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       web3 = new Web3(web3.currentProvider);
       const accounts = await web3.eth.getAccounts();
       userAccount = accounts[0];
-      getInsurer();
+      getPolicyholders();
       getBalance();
+      getPolicyholdersPolicy();
+      fetchClaimsData();
     } else {
       console.log('No web3? You should consider trying MetaMask!');
     }
