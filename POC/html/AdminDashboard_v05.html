@@ -9,92 +9,7 @@
     <link rel="stylesheet" href="../css/AdminDashboard.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="../js/web3.js"></script> 
-    <script src="../js/setup3.js"></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f4f4f9;
-      }
-      h1 {
-        text-align: center;
-      }
-      table {
-        width: 100%;
-        margin: 20px 0;
-        border-collapse: collapse;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      th, td {
-        padding: 12px 15px;
-        text-align: left;
-        border: 1px solid #ddd;
-      }
-      th {
-        background-color: #4CAF50;
-        color: white;
-      }
-      tr:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-      td {
-        word-wrap: break-word;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .info {
-        margin-bottom: 20px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-      }
-      .info p {
-        margin: 0;
-      }
-      button {
-        margin: 0 5px;
-        padding: 8px 12px;
-        border: 1px solid #4CAF50;
-        cursor: pointer;
-        background-color: #4CAF50;
-        color: white;
-        font-size: 16px;
-        border-radius: 50%;
-        transition: background-color 0.3s, transform 0.2s;
-      }
-      button.active {
-        background-color: #388E3C;
-      }
-      button:hover {
-        background-color: #45a049;
-        transform: translateY(-2px);
-      }
-      button:focus {
-        outline: none;
-      }
-      .pagination {
-        text-align: center;
-        margin-top: 10px;
-        padding: 10px;
-        border-top: 1px solid #ddd;
-      }
-      .pagination button {
-        margin: 5px;
-      }
-      .dropdown {
-        margin: 20px 0;
-        text-align: center;
-      }
-      .dropdown select {
-        padding: 10px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-    </style>
+    <script src="../js/setup4.js"></script>
   </head>
 
   <body>
@@ -214,7 +129,7 @@
           <!-- Insurance KYC Section -->
           <div id="insurance-section" class="content-section d-none">
             <h4>Insurance KYC</h4>
-
+            
             <!-- Input Address and Approve Button -->
             <div class="row mb-4">
               <div class="col-md-8 mx-auto">
@@ -225,51 +140,26 @@
               </div>
             </div>
 
-            <!-- 2 Table layout with left and right columns -->
-            <div class="row">
-              <!-- Pending KYC Table (Left) -->
-              <div class="col-lg-6 mb-4 mb-lg-0">
-                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-pending-insurance-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Approved KYC Table (Right) -->
-              <div class="col-lg-6">
-                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-approved-insurance-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="insurer-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="insurance-pagination"></div>
             </div>
           </div>
 
@@ -287,51 +177,26 @@
               </div>
             </div>
 
-            <!-- 2 Table layout with left and right columns -->
-            <div class="row">
-              <!-- Pending KYC Table (Left) -->
-              <div class="col-lg-6 mb-4 mb-lg-0">
-                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-pending-hospital-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Approved KYC Table (Right) -->
-              <div class="col-lg-6">
-                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-approved-hospital-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="hospital-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="hospital-pagination"></div>
             </div>
           </div>
 
@@ -349,53 +214,29 @@
               </div>
             </div>
 
-            <!-- 2 Table layout with left and right columns -->
-            <div class="row">
-              <!-- Pending KYC Table (Left) -->
-              <div class="col-lg-6 mb-4 mb-lg-0">
-                <h4 class="text-center custom-heading text-warning">Pending Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-pending-policyholder-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Approved KYC Table (Right) -->
-              <div class="col-lg-6">
-                <h4 class="text-center custom-heading text-success">Approved Applicants</h4>
-                <div class="table-responsive">
-                  <table class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="kyc-approved-policyholder-table-body">
-                      <tr>
-                        <td colspan="4" class="text-center">Loading...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="policyholder-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="policyholder-pagination"></div>
             </div>
           </div>
+
           </div>
         </div>
       </div>

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/AdminDashboard.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../js/web3.js"></script>
+    <script src="../js/setup4.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="row bg-primary p-3 text-bg-primary fs-3 shadow">
+        <div class="col-4 text-start">
+          <span id="eth_network"></span> network
+        </div>
+        <div class="col-4 text-center">
+          Welcome!!
+        </div>
+        <div class="col-4 text-end" style="height: 45px;">
+          <img src="https://img.icons8.com/?size=100&id=ZrksPzH5Aadq&format=png&color=000000" alt="userAvatar" height="45px;">
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-2 bg-secondary-subtle p-3 vh-100 shadow">
+          <div class="text-center">
+            <img src="../images/admin.jpg" alt="userProfile" width="150px;" class="mt-5">
+          </div>
+          <div class="text-center fw-bold fs-4 mt-3">Administrator</div>
+          <div class="row fw-bold fs-6 mt-3 d-flex justify-content-center text-center" style="word-wrap: break-word;">
+            Wallet ID: <span id="eth_address">Connecting...</span>
+          </div>
+      
+          <!-- Menu -->
+          <div class="mt-4">
+            <div class="menu-header">
+              <i class="fas fa-bars"></i> Menu
+            </div>
+            <ul class="list-unstyled mt-3">
+              <li class="menu-item" data-section="dashboard" data-title="Dashboard Overview">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </li>
+              <li class="menu-item" data-section="kyc" data-title="KYC Management">
+                <i class="fas fa-user-check"></i> KYC Management
+              </li>
+              <li class="menu-item" data-section="policies" data-title="Policies Overview">
+                <i class="fas fa-file-contract"></i> Policies
+              </li>
+              <li class="menu-item" data-section="reports" data-title="Reports Overview">
+                <i class="fas fa-chart-bar"></i> Reports
+              </li>
+            </ul>
+          </div>
+        </div>
+      
+        <!-- Main Content -->
+        <div class="col-10">
+          <div id="main-content">
+            <h2 id="main-title" class="fw-bold p-4">Dashboard Overview</h2>
+            <div id="dashboard-section" class="content-section">
+              <div class="row justify-content-center">
+                <!-- Card for Total Insurance Providers -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Insurance Providers</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="insurer-count" class="insurer-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Card for Total Hospitals -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Hospitals</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="hospital-count" class="hospital-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- Card for Total Policyholders -->
+                <div class="col-3 border ms-3 shadow rounded-3 p-4 d-flex flex-column align-items-center justify-content-center">
+                  <div class="row fw-bold fs-5 text-secondary text-center">Total Policyholders</div>
+                  <div class="row mt-3 w-100">
+                    <div class="col text-center">
+                      <div id="policyholder-count" class="policyholder-count-display-alt fs-4 fw-bold">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <div id="kyc-section" class="content-section d-none">
+            <h3>KYC Management</h3>
+            <p>Manage Know Your Customer (KYC) details here.</p>
+          
+            <div class="container">
+              <h1>Smart Contract Data</h1>
+          
+              <div class="info">
+                <p><strong>Ethereum Address:</strong> <span id="eth_address">Loading...</span></p>
+                <p><strong>Network:</strong> <span id="eth_network">Loading...</span></p>
+              </div>
+          
+              <div class="dropdown">
+                <label for="data-selection">Select Data to Display: </label>
+                <select id="data-selection">
+                  <option value="hospital">Hospitals</option>
+                  <option value="insurer">Insurers</option>
+                  <option value="policyholder">Policyholders</option>
+                </select>
+              </div>
+          
+              <div id="hospital-section" class="section">
+                <h2>Hospitals</h2>
+                <div id="hospital-pagination" class="pagination"></div>
+                <table id="hospital-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>ID Number</th>
+                      <th>Contract</th>
+                      <th>Wallet Address</th>
+                      <th>Is Registered</th>
+                      <th>Is Approved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td colspan="6">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+          
+              <div id="insurer-section" class="section" style="display:none;">
+                <h2>Insurers</h2>
+                <div id="insurer-pagination" class="pagination"></div>
+                <table id="insurer-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>ID Number</th>
+                      <th>Contract</th>
+                      <th>Wallet Address</th>
+                      <th>Is Registered</th>
+                      <th>Is Approved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td colspan="6">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+          
+              <div id="policyholder-section" class="section" style="display:none;">
+                <h2>Policyholders</h2>
+                <div id="policyholder-pagination" class="pagination"></div>
+                <table id="policyholder-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>ID Number</th>
+                      <th>Contract</th>
+                      <th>Wallet Address</th>
+                      <th>Is Registered</th>
+                      <th>Is Approved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td colspan="6">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <div id="policies-section" class="content-section d-none">
+            <h3>Policies</h3>
+            <p>View and manage policies here.</p>
+          </div>
+          <div id="reports-section" class="content-section d-none">
+            <h3>Reports</h3>
+            <p>View system reports here.</p>
+          </div>
+        </div>
+      </div>
+      
+
+    <script src="../js/AdminDashboard.js"></script>
+    <script src="../js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

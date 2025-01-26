@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Contract Integration</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Smart Contract Data</h1>
+
+    <div class="info">
+      <p><strong>Ethereum Address:</strong> <span id="eth_address">Loading...</span></p>
+      <p><strong>Network:</strong> <span id="eth_network">Loading...</span></p>
+    </div>
+
+    <div class="dropdown">
+      <label for="data-selection">Select Data to Display: </label>
+      <select id="data-selection">
+        <option value="hospital">Hospitals</option>
+        <option value="insurer">Insurers</option>
+        <option value="policyholder">Policyholders</option>
+      </select>
+    </div>
+
+    <div id="hospital-section" class="section">
+      <h2>Hospitals</h2>
+      <div id="hospital-pagination" class="pagination"></div>
+      <table id="hospital-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>ID Number</th>
+            <th>Contract</th>
+            <th>Wallet Address</th>
+            <th>Is Registered</th>
+            <th>Is Approved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="insurer-section" class="section" style="display:none;">
+      <h2>Insurers</h2>
+      <div id="insurer-pagination" class="pagination"></div>
+      <table id="insurer-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>ID Number</th>
+            <th>Contract</th>
+            <th>Wallet Address</th>
+            <th>Is Registered</th>
+            <th>Is Approved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="policyholder-section" class="section" style="display:none;">
+      <h2>Policyholders</h2>
+      <div id="policyholder-pagination" class="pagination"></div>
+      <table id="policyholder-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>ID Number</th>
+            <th>Contract</th>
+            <th>Wallet Address</th>
+            <th>Is Registered</th>
+            <th>Is Approved</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="6">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

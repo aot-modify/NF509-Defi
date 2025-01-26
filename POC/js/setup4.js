@@ -1,197 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Contract Integration</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f4f4f9;
-    }
-    h1 {
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      margin: 20px 0;
-      border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
-    th {
-      background-color: #4CAF50;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-    td {
-      word-wrap: break-word;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .info {
-      margin-bottom: 20px;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .info p {
-      margin: 0;
-    }
-    button {
-      margin: 0 5px;
-      padding: 8px 12px;
-      border: 1px solid #4CAF50;
-      cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 16px;
-      border-radius: 50%;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    button.active {
-      background-color: #388E3C;
-    }
-    button:hover {
-      background-color: #45a049;
-      transform: translateY(-2px);
-    }
-    button:focus {
-      outline: none;
-    }
-    .pagination {
-      text-align: center;
-      margin-top: 10px;
-      padding: 10px;
-      border-top: 1px solid #ddd;
-    }
-    .pagination button {
-      margin: 5px;
-    }
-    .dropdown {
-      margin: 20px 0;
-      text-align: center;
-    }
-    .dropdown select {
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Smart Contract Data</h1>
+// Web3 and Smart Contract integration
+window.addEventListener('load', async () => {
+  // ตรวจสอบว่า Web3 หรือ Ethereum object ถูก inject หรือไม่
+  if (typeof window.ethereum !== 'undefined') {
+    const web3 = new Web3(window.ethereum);
+    try {
+      // ขอสิทธิ์เข้าถึงบัญชีผู้ใช้
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-    <div class="info">
-      <p><strong>Ethereum Address:</strong> <span id="eth_address">Loading...</span></p>
-      <p><strong>Network:</strong> <span id="eth_network">Loading...</span></p>
-    </div>
+      // ดึงบัญชีผู้ใช้
+      const accounts = await web3.eth.getAccounts();
+      const userAccount = accounts[0];
+      
+      // ตัดทอน Wallet Address
+      const shortAddress = formatShortAddress(userAccount);
+      document.getElementById('eth_address').innerText = shortAddress;
 
-    <div class="dropdown">
-      <label for="data-selection">Select Data to Display: </label>
-      <select id="data-selection">
-        <option value="hospital">Hospitals</option>
-        <option value="insurer">Insurers</option>
-        <option value="policyholder">Policyholders</option>
-      </select>
-    </div>
+      // ดึงข้อมูลเครือข่าย
+      const networkId = await web3.eth.net.getId();
+      const networkName = getNetworkName(networkId);
+      document.getElementById('eth_network').innerText = networkName;
 
-    <div id="hospital-section" class="section">
-      <h2>Hospitals</h2>
-      <div id="hospital-pagination" class="pagination"></div>
-      <table id="hospital-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>ID Number</th>
-            <th>Contract</th>
-            <th>Wallet Address</th>
-            <th>Is Registered</th>
-            <th>Is Approved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="6">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
+      // เพิ่มข้อความแจ้งเตือนสำหรับเครือข่ายที่ไม่รองรับ
+      if (networkName === 'Unknown') {
+        alert('You are connected to an unsupported network. Please switch to a supported network.');
+      }
 
-    <div id="insurer-section" class="section" style="display:none;">
-      <h2>Insurers</h2>
-      <div id="insurer-pagination" class="pagination"></div>
-      <table id="insurer-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>ID Number</th>
-            <th>Contract</th>
-            <th>Wallet Address</th>
-            <th>Is Registered</th>
-            <th>Is Approved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="6">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div id="policyholder-section" class="section" style="display:none;">
-      <h2>Policyholders</h2>
-      <div id="policyholder-pagination" class="pagination"></div>
-      <table id="policyholder-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>ID Number</th>
-            <th>Contract</th>
-            <th>Wallet Address</th>
-            <th>Is Registered</th>
-            <th>Is Approved</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="6">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <script>
-    window.addEventListener('load', async () => {
-      if (typeof window.ethereum !== 'undefined') {
-        const web3 = new Web3(window.ethereum);
-        try {
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-          const accounts = await web3.eth.getAccounts();
-          const userAccount = accounts[0];
-          const shortAddress = formatShortAddress(userAccount);
-          document.getElementById('eth_address').innerText = shortAddress;
-
-          const networkId = await web3.eth.net.getId();
-          const networkName = getNetworkName(networkId);
-          document.getElementById('eth_network').innerText = networkName;
-
-          if (networkName === 'Unknown') {
-            alert('You are connected to an unsupported network. Please switch to a supported network.');
-          }
-
-          const contractAddress = '0x5699b7fCFd6Dc71F8aF5343bAd5c770C20dc4aB0';
-          const contractABI = [
+      // กำหนดค่า Smart Contract
+      const contractAddress = '0x5699b7fCFd6Dc71F8aF5343bAd5c770C20dc4aB0';
+      const contractABI = [
         {
           "inputs": [],
           "stateMutability": "nonpayable",
@@ -1006,126 +842,71 @@
           "type": "function"
         }
       ];
+      
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-          const contract = new web3.eth.Contract(contractABI, contractAddress);
+      // ดึงจำนวน Insurer จาก Smart Contract
+      const insurerCount = await contract.methods.getInsurerCount().call();
+      console.log('Insurer Count:', insurerCount); // Debug log
+      document.getElementById('insurer-count').innerText = insurerCount;
 
-          // ดึงข้อมูลทั้งหมดของ Hospitals
-          const hospitals = await contract.methods.getAllHospitals().call();
-          updateTable('hospital-table', hospitals, 'hospital-pagination');
+      // ดึงจำนวน Hospital จาก Smart Contract
+      const hospitalCount = await contract.methods.getHospitalCount().call();
+      console.log('Hospital Count:', hospitalCount); // Debug log
+      document.getElementById('hospital-count').innerText = hospitalCount;
 
-          // ดึงข้อมูลทั้งหมดของ Insurers
-          const insurers = await contract.methods.getAllInsurers().call();
-          updateTable('insurer-table', insurers, 'insurer-pagination');
+      // ดึงจำนวน policyholder จาก Smart Contract
+      const policyholderCount = await contract.methods.getPolicyholderCount().call();
+      console.log('policyholder Count:', policyholderCount); // Debug log
+      document.getElementById('policyholder-count').innerText = policyholderCount;
 
-          // ดึงข้อมูลทั้งหมดของ Policyholders
-          const policyholders = await contract.methods.getAllPolicyholders().call();
-          updateTable('policyholder-table', policyholders, 'policyholder-pagination');
+      // Fetch data for hospitals, insurers, and policyholders
+      const hospitals = await contract.methods.getAllHospitals().call();
+      updateTable('hospital-table', hospitals, 'hospital-pagination');
+  
+      const insurers = await contract.methods.getAllInsurers().call();
+      updateTable('insurer-table', insurers, 'insurer-pagination');
+  
+      const policyholders = await contract.methods.getAllPolicyholders().call();
+      updateTable('policyholder-table', policyholders, 'policyholder-pagination');
 
-        } catch (error) {
-          console.error('Error connecting to Ethereum:', error);
-          alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
-        }
-      } else {
-        alert('Please install MetaMask or another Ethereum wallet extension.');
-      }
-    });
-
-    function getNetworkName(networkId) {
-      switch (networkId) {
-        case 1: return 'Mainnet';
-        case 3: return 'Ropsten';
-        case 4: return 'Rinkeby';
-        case 5: return 'Goerli';
-        case 42: return 'Kovan';
-        case 11155111: return 'Sepolia';
-        case 5777: return 'Ganache';
-        default: return 'Unknown';
-      }
+    } catch (error) {
+      console.error('Error connecting to Ethereum:', error);
+      alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
     }
+  } else {
+    // แจ้งเตือนผู้ใช้ให้ติดตั้ง MetaMask หรือ Ethereum wallet
+    alert('Please install MetaMask or another Ethereum wallet extension.');
+  }
+});
 
-    function formatShortAddress(address) {
-      if (address && address.length > 10) {
-        return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-      }
-      return address;
-    }
+// ฟังก์ชันสำหรับดึงชื่อเครือข่ายตาม Network ID
+function getNetworkName(networkId) {
+  switch (networkId) {
+    case 1:
+      return 'Mainnet';
+    case 3:
+      return 'Ropsten';
+    case 4:
+      return 'Rinkeby';
+    case 5:
+      return 'Goerli';
+    case 42:
+      return 'Kovan';
+    case 11155111:
+      return 'Sepolia';
+    case 5777:
+      return 'Ganache';
+    default:
+      return 'Unknown';
+  }
+}
 
-    function updateTable(tableId, data, paginationId) {
-      const rowsPerPage = 10;
-      let currentPage = 1;
+// ฟังก์ชันสำหรับตัดทอน Wallet Address
+function formatShortAddress(address) {
+  if (address && address.length > 10) {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  }
+  return address;
+}
 
-      const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
-      const paginationContainer = document.getElementById(paginationId);
-
-      function renderTable(page) {
-        currentPage = page;
-        const startIndex = (page - 1) * rowsPerPage;
-        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
-        tableBody.innerHTML = '';
-
-        for (let i = startIndex; i < endIndex; i++) {
-          const item = data[i];
-          const row = tableBody.insertRow();
-          const nameCell = row.insertCell(0);
-          const idNumberCell = row.insertCell(1);
-          const contractCell = row.insertCell(2);
-          const walletCell = row.insertCell(3);
-          const isRegisteredCell = row.insertCell(4);
-          const isApprovedCell = row.insertCell(5);
-
-          nameCell.textContent = item[0] || "N/A";
-          idNumberCell.textContent = item[1] || "N/A";
-          contractCell.textContent = item[2] || "N/A";
-          walletCell.textContent = item[3] || "N/A";
-          isRegisteredCell.textContent = item[4] ? "Yes" : "No";
-          isApprovedCell.textContent = item[5] ? "Yes" : "No";
-        }
-
-        renderPagination();
-      }
-
-      function renderPagination() {
-        const totalPages = Math.ceil(data.length / rowsPerPage);
-        paginationContainer.innerHTML = '';
-
-        const prevButton = document.createElement('button');
-        prevButton.innerHTML = '&lt;';
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener('click', () => renderTable(currentPage - 1));
-        paginationContainer.appendChild(prevButton);
-
-        for (let i = 1; i <= totalPages; i++) {
-          const button = document.createElement('button');
-          button.textContent = i;
-          button.className = i === currentPage ? 'active' : '';
-          button.addEventListener('click', () => renderTable(i));
-          paginationContainer.appendChild(button);
-        }
-
-        const nextButton = document.createElement('button');
-        nextButton.innerHTML = '&gt;';
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener('click', () => renderTable(currentPage + 1));
-        paginationContainer.appendChild(nextButton);
-      }
-
-      renderTable(1);
-    }
-
-    document.getElementById('data-selection').addEventListener('change', (e) => {
-      const value = e.target.value;
-      document.querySelectorAll('.section').forEach((section) => {
-        section.style.display = 'none';
-      });
-
-      if (value === 'hospital') {
-        document.getElementById('hospital-section').style.display = 'block';
-      } else if (value === 'insurer') {
-        document.getElementById('insurer-section').style.display = 'block';
-      } else if (value === 'policyholder') {
-        document.getElementById('policyholder-section').style.display = 'block';
-      }
-    });
-  </script>
-</body>
-</html>
