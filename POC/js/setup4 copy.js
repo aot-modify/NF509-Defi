@@ -10,7 +10,7 @@ window.addEventListener('load', async () => {
       // ดึงบัญชีผู้ใช้
       const accounts = await web3.eth.getAccounts();
       const userAccount = accounts[0];
-
+      
       // ตัดทอน Wallet Address
       const shortAddress = formatShortAddress(userAccount);
       document.getElementById('eth_address').innerText = shortAddress;
@@ -26,7 +26,7 @@ window.addEventListener('load', async () => {
       }
 
       // กำหนดค่า Smart Contract
-      const contractAddress = '0x5699b7fCFd6Dc71F8aF5343bAd5c770C20dc4aB0';
+      const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d';
       const contractABI = [
         {
           "inputs": [],
@@ -51,45 +51,6 @@ window.addEventListener('load', async () => {
           ],
           "name": "Approved",
           "type": "event"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "hospitalAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approveHospital",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "insurerAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approveInsurer",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "policyholderAddress",
-              "type": "address"
-            }
-          ],
-          "name": "approvePolicyholder",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
         },
         {
           "anonymous": false,
@@ -134,29 +95,6 @@ window.addEventListener('load', async () => {
           ],
           "name": "ClaimSubmitted",
           "type": "event"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "policyName",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "terms",
-              "type": "string"
-            },
-            {
-              "internalType": "uint256",
-              "name": "premium",
-              "type": "uint256"
-            }
-          ],
-          "name": "createPolicy",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
         },
         {
           "anonymous": false,
@@ -228,121 +166,6 @@ window.addEventListener('load', async () => {
           "type": "event"
         },
         {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "claimId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "approve",
-              "type": "bool"
-            }
-          ],
-          "name": "processClaim",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "policyId",
-              "type": "uint256"
-            }
-          ],
-          "name": "purchasePolicy",
-          "outputs": [],
-          "stateMutability": "payable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsHospital",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsInsurer",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "name",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "idNumber",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "contact",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "wallet",
-              "type": "address"
-            }
-          ],
-          "name": "registerAsPolicyholder",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
           "anonymous": false,
           "inputs": [
             {
@@ -362,29 +185,6 @@ window.addEventListener('load', async () => {
           "type": "event"
         },
         {
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "policyId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "string",
-              "name": "reason",
-              "type": "string"
-            }
-          ],
-          "name": "submitClaim",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
           "inputs": [],
           "name": "admin",
           "outputs": [
@@ -395,6 +195,45 @@ window.addEventListener('load', async () => {
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "hospitalAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "insurerAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "policyholderAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approvePolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -447,6 +286,29 @@ window.addEventListener('load', async () => {
             }
           ],
           "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "policyName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "terms",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "premium",
+              "type": "uint256"
+            }
+          ],
+          "name": "createPolicy",
+          "outputs": [],
+          "stateMutability": "nonpayable",
           "type": "function"
         },
         {
@@ -624,6 +486,25 @@ window.addEventListener('load', async () => {
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "hospitalAddresses",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "hospitalCount",
           "outputs": [
@@ -675,6 +556,25 @@ window.addEventListener('load', async () => {
               "internalType": "bool",
               "name": "isApproved",
               "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "insurerAddresses",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
             }
           ],
           "stateMutability": "view",
@@ -785,8 +685,51 @@ window.addEventListener('load', async () => {
           "type": "function"
         },
         {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "policyholderAddresses",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
           "inputs": [],
           "name": "policyholderCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "policyholderPolicies",
           "outputs": [
             {
               "internalType": "uint256",
@@ -840,19 +783,162 @@ window.addEventListener('load', async () => {
           ],
           "stateMutability": "view",
           "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "claimId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "approve",
+              "type": "bool"
+            }
+          ],
+          "name": "processClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            }
+          ],
+          "name": "purchasePolicy",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsPolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "submitClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
         }
-      ]; // ใส่ ABI ของ Smart Contract ที่นี่
+      ];
       
       const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-      // ดึงข้อมูลต่าง ๆ จาก Smart Contract
+      // ดึงจำนวน Insurer จาก Smart Contract
       const insurerCount = await contract.methods.getInsurerCount().call();
-      const hospitalCount = await contract.methods.getHospitalCount().call();
-      const policyholderCount = await contract.methods.getPolicyholderCount().call();
-
-      // อัพเดตค่าบน Dashboard
+      console.log('Insurer Count:', insurerCount); // Debug log
       document.getElementById('insurer-count').innerText = insurerCount;
+
+      // ดึงจำนวน Hospital จาก Smart Contract
+      const hospitalCount = await contract.methods.getHospitalCount().call();
+      console.log('Hospital Count:', hospitalCount); // Debug log
       document.getElementById('hospital-count').innerText = hospitalCount;
+
+      // ดึงจำนวน policyholder จาก Smart Contract
+      const policyholderCount = await contract.methods.getPolicyholderCount().call();
+      console.log('policyholder Count:', policyholderCount); // Debug log
       document.getElementById('policyholder-count').innerText = policyholderCount;
 
     } catch (error) {
@@ -860,6 +946,7 @@ window.addEventListener('load', async () => {
       alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
     }
   } else {
+    // แจ้งเตือนผู้ใช้ให้ติดตั้ง MetaMask หรือ Ethereum wallet
     alert('Please install MetaMask or another Ethereum wallet extension.');
   }
 });
@@ -867,14 +954,22 @@ window.addEventListener('load', async () => {
 // ฟังก์ชันสำหรับดึงชื่อเครือข่ายตาม Network ID
 function getNetworkName(networkId) {
   switch (networkId) {
-    case 1: return 'Mainnet';
-    case 3: return 'Ropsten';
-    case 4: return 'Rinkeby';
-    case 5: return 'Goerli';
-    case 42: return 'Kovan';
-    case 11155111: return 'Sepolia';
-    case 5777: return 'Ganache';
-    default: return 'Unknown';
+    case 1:
+      return 'Mainnet';
+    case 3:
+      return 'Ropsten';
+    case 4:
+      return 'Rinkeby';
+    case 5:
+      return 'Goerli';
+    case 42:
+      return 'Kovan';
+    case 11155111:
+      return 'Sepolia';
+    case 5777:
+      return 'Ganache';
+    default:
+      return 'Unknown';
   }
 }
 
@@ -886,79 +981,3 @@ function formatShortAddress(address) {
   return address;
 }
 
-
-// UI Logic and Dynamic Menu Management
-document.addEventListener("DOMContentLoaded", () => {
-  const menuItems = document.querySelectorAll(".menu-item");
-  const sections = document.querySelectorAll(".content-section");
-  const mainTitle = document.getElementById("main-title");
-
-  // Menu Click Event
-  menuItems.forEach(item => {
-    item.addEventListener("click", () => {
-      // Remove active class from all menu items
-      menuItems.forEach(menu => menu.classList.remove("active"));
-      // Hide all sections
-      sections.forEach(section => section.classList.add("d-none"));
-
-      // Add active class to clicked menu item
-      item.classList.add("active");
-      // Show the relevant section
-      const sectionId = item.getAttribute("data-section") + "-section";
-      const selectedSection = document.getElementById(sectionId);
-      if (selectedSection) {
-        selectedSection.classList.remove("d-none");
-      }
-
-      // Update the title dynamically
-      const newTitle = item.getAttribute("data-title");
-      mainTitle.textContent = newTitle;
-    });
-  });
-
-  // Handle Dropdown Items
-  const dropdownItems = document.querySelectorAll(".dropdown-item");
-  dropdownItems.forEach(item => {
-    item.addEventListener("click", (e) => {
-      e.preventDefault(); // Stop link default behavior
-
-      // ถ้าคลิกที่ Insurance Section
-      if (item.getAttribute("data-section") === "insurance") {
-        // คำนวณขนาดและตำแหน่งของหน้าจอเพื่อให้ Popup อยู่ตรงกลาง
-        const width = 800; // กำหนดขนาดของ Popup
-        const height = 600;
-        const left = (window.innerWidth - width) / 2; // คำนวณตำแหน่งซ้าย
-        const top = (window.innerHeight - height) / 2; // คำนวณตำแหน่งบน
-
-        // เปิด Popup โดยใช้ตำแหน่งที่คำนวณ
-        window.open('test1.html', 'popup', `width=${width}, height=${height}, top=${top}, left=${left}, resizable=yes, scrollbars=yes`);
-
-        return; // หยุดการทำงานของโค้ดที่เหลือ
-      }
-
-      // Remove active class from all dropdown items
-      dropdownItems.forEach(menu => menu.classList.remove("active"));
-
-      // Add active class to clicked dropdown item
-      item.classList.add("active");
-
-      // Highlight the main dropdown menu
-      const dropdownMenu = item.closest(".dropdown");
-      const mainKycMenu = dropdownMenu.querySelector("a.dropdown-toggle");
-      mainKycMenu.classList.add("active");
-
-      // Show the related content section
-      const sectionId = item.getAttribute("data-section") + "-section";
-      const selectedSection = document.getElementById(sectionId);
-      if (selectedSection) {
-        selectedSection.classList.remove("d-none");
-      }
-
-      // Update the main title dynamically
-      const newTitle = item.getAttribute("data-title");
-      mainTitle.textContent = newTitle;
-    });
-  });
-
-
-});

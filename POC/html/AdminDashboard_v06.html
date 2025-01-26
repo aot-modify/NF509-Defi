@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/AdminDashboard.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="../js/web3.js"></script>
+    <script src="../js/web3.js"></script> 
     <script src="../js/setup4.js"></script>
   </head>
+
   <body>
     <div class="container-fluid">
       <!-- Header -->
@@ -46,8 +47,36 @@
               <li class="menu-item" data-section="dashboard" data-title="Dashboard Overview">
                 <i class="fas fa-tachometer-alt"></i> Dashboard
               </li>
-              <li class="menu-item" data-section="kyc" data-title="KYC Management">
-                <i class="fas fa-user-check"></i> KYC Management
+              <li>
+                <div class="dropdown">
+                  <a
+                    class="dropdown-toggle text-decoration-none text-dark menu-item"
+                    href="#"
+                    role="button"
+                    id="kycDropdownMenu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-user-check"></i> KYC Management <i class="fas fa-caret-down"></i> <!-- ลูกศร -->
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="kycDropdownMenu">
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="insurance" data-title="Insurance KYC">
+                        <i class="fas fa-shield-alt"></i> Insurance
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="hospital" data-title="Hospital KYC">
+                        <i class="fas fa-hospital"></i> Hospital
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item menu-item" href="#" data-section="policyholder" data-title="Policyholder KYC">
+                        <i class="fas fa-user"></i> Policyholder
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li class="menu-item" data-section="policies" data-title="Policies Overview">
                 <i class="fas fa-file-contract"></i> Policies
@@ -96,105 +125,142 @@
                 </div>
               </div>
             </div>
-          </div>
-      
-          <div id="kyc-section" class="content-section d-none">
-            <h3>KYC Management</h3>
-            <p>Manage Know Your Customer (KYC) details here.</p>
-          
-            <div class="container">
-              <h1>Smart Contract Data</h1>
-          
-              <div class="info">
-                <p><strong>Ethereum Address:</strong> <span id="eth_address">Loading...</span></p>
-                <p><strong>Network:</strong> <span id="eth_network">Loading...</span></p>
-              </div>
-          
-              <div class="dropdown">
-                <label for="data-selection">Select Data to Display: </label>
-                <select id="data-selection">
-                  <option value="hospital">Hospitals</option>
-                  <option value="insurer">Insurers</option>
-                  <option value="policyholder">Policyholders</option>
-                </select>
-              </div>
-          
-              <div id="hospital-section" class="section">
-                <h2>Hospitals</h2>
-                <div id="hospital-pagination" class="pagination"></div>
-                <table id="hospital-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>ID Number</th>
-                      <th>Contract</th>
-                      <th>Wallet Address</th>
-                      <th>Is Registered</th>
-                      <th>Is Approved</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td colspan="6">Loading...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-          
-              <div id="insurer-section" class="section" style="display:none;">
-                <h2>Insurers</h2>
-                <div id="insurer-pagination" class="pagination"></div>
-                <table id="insurer-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>ID Number</th>
-                      <th>Contract</th>
-                      <th>Wallet Address</th>
-                      <th>Is Registered</th>
-                      <th>Is Approved</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td colspan="6">Loading...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-          
-              <div id="policyholder-section" class="section" style="display:none;">
-                <h2>Policyholders</h2>
-                <div id="policyholder-pagination" class="pagination"></div>
-                <table id="policyholder-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>ID Number</th>
-                      <th>Contract</th>
-                      <th>Wallet Address</th>
-                      <th>Is Registered</th>
-                      <th>Is Approved</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td colspan="6">Loading...</td></tr>
-                  </tbody>
-                </table>
+
+          <!-- Insurance KYC Section -->
+          <div id="insurance-section" class="content-section d-none">
+            <h4>Insurance KYC</h4>
+            
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-insurance" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-insurance">Approve</button>
+                </div>
               </div>
             </div>
+
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="insurer-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="insurance-pagination"></div>
+            </div>
           </div>
-          
+
+          <!-- Hospital KYC Section -->
+          <div id="hospital-section" class="content-section d-none">
+            <h4>Hospital KYC</h4>
+
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-hospital" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-hospital">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="hospital-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="hospital-pagination"></div>
+            </div>
+          </div>
+
+          <!-- Policyholder KYC Section -->
+          <div id="policyholder-section" class="content-section d-none">
+            <h4>Policyholder KYC</h4>
+
+            <!-- Input Address and Approve Button -->
+            <div class="row mb-4">
+              <div class="col-md-8 mx-auto">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="address-input-policyholder" placeholder="Enter Address">
+                  <button class="btn btn-success" id="approve-button-policyholder">Approve</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- KYC Table -->
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID Number</th>
+                    <th>Contract</th>
+                    <th>Wallet Address</th>
+                    <th>Is Registered</th>
+                    <th>Is Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="policyholder-table-body">
+                  <tr>
+                    <td colspan="6" class="text-center">Loading...</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div id="policyholder-pagination"></div>
+            </div>
+          </div>
+
+          <!-- Policies Section -->
+          <!-- Policies Section -->
           <div id="policies-section" class="content-section d-none">
-            <h3>Policies</h3>
-            <p>View and manage policies here.</p>
+            <h4>Policies Overview</h4>
+            <!-- เพิ่ม iframe ที่จะแสดงหน้า Policies.html -->
+            <iframe src="KYC.html" width="100%" height="600px" style="border: none;"></iframe>
           </div>
-          <div id="reports-section" class="content-section d-none">
-            <h3>Reports</h3>
-            <p>View system reports here.</p>
+
           </div>
         </div>
       </div>
       
 
-    <script src="../js/AdminDashboard.js"></script>
-    <script src="../js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        document.querySelector('.menu-item[data-section="policies"]').addEventListener('click', function() {
+          // ซ่อนส่วนอื่น ๆ
+          document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.add('d-none');
+          });
+
+          // แสดงส่วนของ Policies
+          document.getElementById('policies-section').classList.remove('d-none');
+        });
+      </script>
   </body>
 </html>
