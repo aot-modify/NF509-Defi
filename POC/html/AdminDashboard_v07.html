@@ -100,23 +100,22 @@
       
           <!-- KYC Management iframe -->
           <div id="kyc-section" class="content-section d-none">
-            <iframe src="KYC.html" width="100%" height="600px" frameborder="0"></iframe>
+            <iframe src="KYC2.html" width="100%" height="600px" frameborder="0"></iframe>
           </div>
 
           <div id="policies-section" class="content-section d-none">
             <h3>Policies</h3>
             <p>View and manage policies here.</p>
           </div>
+
+          <!-- iframe for Transaction.html -->
           <div id="reports-section" class="content-section d-none">
-            <h3>Reports</h3>
-            <p>View system reports here.</p>
+            <iframe src="Transaction.html" width="100%" height="600px" frameborder="0"></iframe>
           </div>
         </div>
       </div>
 
-    <script src="../js/AdminDashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
       // Handle menu item clicks to load appropriate content
       document.querySelectorAll('.menu-item').forEach(item => {
@@ -139,6 +138,8 @@
         // Show the selected section
         if (section === 'kyc') {
           document.getElementById('kyc-section').classList.remove('d-none');
+        } else if (section === 'reports') {
+          document.getElementById('reports-section').classList.remove('d-none');
         } else {
           document.getElementById(section + '-section').classList.remove('d-none');
         }
@@ -147,5 +148,6 @@
       // Default to showing the dashboard when the page loads
       loadSection('dashboard', 'Dashboard Overview');
     </script>
+    <script src="../js/AdminDashboard.js"></script>
   </body>
 </html>
