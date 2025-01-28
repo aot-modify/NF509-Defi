@@ -1,4 +1,4 @@
-var contractAddress = '0x5dc301b3eDEDC2fc9F1dA54a0880deEE6Ec516Cc';
+const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d';
 var network = "";
 let networkDisplay = "";
 var explorerUrl = "";
@@ -22,147 +22,41 @@ var userinsurer ="";
 // var Approved = "";
 // var Processed = "";
 
-let abi = [
-  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
-  {
-    "anonymous":false,"inputs":
-    [
-      {"indexed":true,"internalType":"address","name":"user","type":"address"},
-      {"indexed":false,"internalType":"string","name":"role","type":"string"}
-    ],
-    "name":"Approved","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":false,"internalType":"uint256","name":"claimId","type":"uint256"},
-      {"indexed":false,"internalType":"bool","name":"approved","type":"bool"}
-    ],
-    "name":"ClaimProcessed","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":false,"internalType":"uint256","name":"claimId","type":"uint256"},
-      {"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},
-      {"indexed":false,"internalType":"address","name":"hospital","type":"address"}
-    ],
-    "name":"ClaimSubmitted","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":true,"internalType":"address","name":"insurer","type":"address"},
-      {"indexed":true,"internalType":"address","name":"hospital","type":"address"},
-      {"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}
-    ],
-    "name":"FundsTransferred","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},
-      {"indexed":false,"internalType":"string","name":"policyName","type":"string"},
-      {"indexed":false,"internalType":"address","name":"insurer","type":"address"}
-    ],
-    "name":"PolicyCreated","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},
-      {"indexed":false,"internalType":"address","name":"policyholder","type":"address"}
-    ],
-    "name":"PolicyPurchased","type":"event"
-  },{
-    "anonymous":false,"inputs":
-    [
-      {"indexed":true,"internalType":"address","name":"user","type":"address"},
-      {"indexed":false,"internalType":"string","name":"role","type":"string"}
-    ],
-    "name":"Registered","type":"event"
-  },{
-    "inputs":[],"name":"admin","outputs":
-    [
-      {"internalType":"address","name":"","type":"address"}
-    ],
-    "stateMutability":"view","type":"function"
-  },{
-    "inputs":
-    [
-      {"internalType":"address","name":"hospitalAddress","type":"address"}
-    ],
-    "name":"approveHospital","outputs":[],"stateMutability":"nonpayable","type":"function"
-  },{
-    "inputs":[{"internalType":"address","name":"insurerAddress","type":"address"}],
-    "name":"approveInsurer","outputs":[],"stateMutability":"nonpayable","type":"function"
-  },{
-    "inputs":[{"internalType":"address","name":"policyholderAddress","type":"address"}],
-    "name":"approvePolicyholder","outputs":[],"stateMutability":"nonpayable","type":"function"
-  },{
-    "inputs":[],"name":"claimCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-    "stateMutability":"view","type":"function"
-  },{
-    "inputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-    "name":"claims","outputs":
-    [
-      {"internalType":"address","name":"hospital","type":"address"},
-      {"internalType":"uint256","name":"amount","type":"uint256"},
-      {"internalType":"string","name":"reason","type":"string"},
-      {"internalType":"bool","name":"approved","type":"bool"},
-      {"internalType":"bool","name":"processed","type":"bool"}
-    ],
-    "stateMutability":"view","type":"function"
-  },{
-    "inputs":
-    [
-      {"internalType":"string","name":"policyName","type":"string"},
-      {"internalType":"string","name":"terms","type":"string"},
-      {"internalType":"uint256","name":"premium","type":"uint256"}
-    ],
-    "name":"createPolicy","outputs":[],"stateMutability":"nonpayable","type":"function"
-  },{
-    "inputs":[],"name":"getHospitalCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"
-  },{
-    "inputs":[],"name":"getInsurerCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"
-  },{
-    "inputs":[],"name":"getPolicyholderCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"
-  },{
-    "inputs":[],"name":"hospitalCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"
-  },{
-    "inputs":[{"internalType":"address","name":"","type":"address"}],"name":"hospitals","outputs":
-    [{"internalType":"string","name":"name","type":"string"},
-    {"internalType":"string","name":"idNumber","type":"string"},
-    {"internalType":"string","name":"contact","type":"string"},
-    {"internalType":"address","name":"wallet","type":"address"},
-    {"internalType":"bool","name":"isRegistered","type":"bool"},
-    {"internalType":"bool","name":"isApproved","type":"bool"}],
-    "stateMutability":"view","type":"function"},
-    {"inputs":[],"name":"insurerCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],
-    "stateMutability":"view","type":"function"},{
-    "inputs":[{"internalType":"address","name":"","type":"address"}],
-    "name":"insurers","outputs":[{"internalType":"string","name":"name","type":"string"},{
-    "internalType":"string","name":"idNumber","type":"string"},{
-    "internalType":"string","name":"contact","type":"string"},{
-    "internalType":"address","name":"wallet","type":"address"},{
-    "internalType":"bool","name":"isRegistered","type":"bool"},{
-    "internalType":"bool","name":"isApproved","type":"bool"}],"stateMutability":"view","type":"function"},{
-    "inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"policies","outputs":[{"internalType":"string","name":"policyName","type":"string"},{
-    "internalType":"string","name":"terms","type":"string"},{
-    "internalType":"uint256","name":"premium","type":"uint256"},{
-    "internalType":"address","name":"insurer","type":"address"}],"stateMutability":"view","type":"function"},{
-    "inputs":[],"name":"policyCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"policyholderCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{
-    "inputs":[{"internalType":"address","name":"","type":"address"}],"name":"policyholders","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{
-    "internalType":"string","name":"contact","type":"string"},{
-    "internalType":"address","name":"wallet","type":"address"},{
-    "internalType":"bool","name":"isRegistered","type":"bool"},{
-    "internalType":"bool","name":"isApproved","type":"bool"}],"stateMutability":"view","type":"function"},{
-    "inputs":[{"internalType":"uint256","name":"claimId","type":"uint256"},{
-    "internalType":"bool","name":"approve","type":"bool"}],"name":"processClaim","outputs":[],"stateMutability":"nonpayable","type":"function"},{
-    "inputs":[{"internalType":"uint256","name":"policyId","type":"uint256"}],"name":"purchasePolicy","outputs":[],"stateMutability":"payable","type":"function"},{
-    "inputs":[{"internalType":"string","name":"name","type":"string"},{
-    "internalType":"string","name":"idNumber","type":"string"},{
-    "internalType":"string","name":"contact","type":"string"},{
-    "internalType":"address","name":"wallet","type":"address"}],"name":"registerAsHospital","outputs":[],"stateMutability":"nonpayable","type":"function"},{
-    "inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"}],"name":"registerAsInsurer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"}],"name":"registerAsPolicyholder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"policyId","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"reason","type":"string"}]
-    ,"name":"submitClaim","outputs":[],"stateMutability":"nonpayable","type":"function"
-  }
+const abi = [
+  {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"string","name":"role","type":"string"}],"name":"Approved","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"claimId","type":"uint256"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ClaimProcessed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"claimId","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},{"indexed":false,"internalType":"address","name":"hospital","type":"address"}],"name":"ClaimSubmitted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"insurer","type":"address"},{"indexed":true,"internalType":"address","name":"hospital","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"FundsTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},{"indexed":false,"internalType":"string","name":"policyName","type":"string"},{"indexed":false,"internalType":"address","name":"insurer","type":"address"}],"name":"PolicyCreated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"policyId","type":"uint256"},{"indexed":false,"internalType":"address","name":"policyholder","type":"address"}],"name":"PolicyPurchased","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"string","name":"role","type":"string"}],"name":"Registered","type":"event"},
+  {"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"hospitalAddress","type":"address"}],"name":"approveHospital","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"insurerAddress","type":"address"}],"name":"approveInsurer","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"policyholderAddress","type":"address"}],"name":"approvePolicyholder","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[],"name":"claimCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"claims","outputs":[{"internalType":"address","name":"hospital","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"reason","type":"string"},{"internalType":"bool","name":"approved","type":"bool"},{"internalType":"bool","name":"processed","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"string","name":"policyName","type":"string"},{"internalType":"string","name":"terms","type":"string"},{"internalType":"uint256","name":"premium","type":"uint256"}],"name":"createPolicy","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[],"name":"getAllHospitals","outputs":[{"components":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"internalType":"struct InsuranceSystem.User[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"getAllInsurers","outputs":[{"components":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"internalType":"struct InsuranceSystem.User[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"getAllPolicyholders","outputs":[{"components":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"internalType":"struct InsuranceSystem.User[]","name":"","type":"tuple[]"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"getHospitalCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"getInsurerCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"getPolicyholderCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"hospitalAddresses","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"hospitalCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"hospitals","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"insurerAddresses","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"insurerCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"insurers","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"policies","outputs":[{"internalType":"string","name":"policyName","type":"string"},{"internalType":"string","name":"terms","type":"string"},{"internalType":"uint256","name":"premium","type":"uint256"},{"internalType":"address","name":"insurer","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"policyCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"policyholderAddresses","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"policyholderCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"policyholderPolicies","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"policyholders","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isRegistered","type":"bool"},{"internalType":"bool","name":"isApproved","type":"bool"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"claimId","type":"uint256"},{"internalType":"bool","name":"approve","type":"bool"}],"name":"processClaim","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"policyId","type":"uint256"}],"name":"purchasePolicy","outputs":[],"stateMutability":"payable","type":"function"},
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"}],"name":"registerAsHospital","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"}],"name":"registerAsInsurer","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"idNumber","type":"string"},{"internalType":"string","name":"contact","type":"string"},{"internalType":"address","name":"wallet","type":"address"}],"name":"registerAsPolicyholder","outputs":[],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"uint256","name":"policyId","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"reason","type":"string"}],"name":"submitClaim","outputs":[],"stateMutability":"nonpayable","type":"function"}
 ];
+      
 
 window.addEventListener('load', function() {
   // Modern Dapp browsers...
@@ -306,43 +200,14 @@ function openUserAddressOnEtherScan() {
   window.open(url,'_blank');
 }
 
-function getContract() {
-  let contract = new web3.eth.Contract(abi, contractAddress)
-  return contract;
-}
-
 // function Test() {
 //     alert("Test");
 //     alert(userAccount);
 // }
 
-async function getPolicyholder() {
-  let contract = getContract();
-  const wallet = userAccount;
-
-  if (!wallet) {
-    alert("User account not found. Please make sure you are logged in.");
-    return;
-  }
-
-  try {
-    const dataInsurers = await contract.methods.insurers(wallet).call();
-    // alert(wallet);
-    userName = dataInsurers.name;
-    useridNumber = dataInsurers.idNumber;
-    userContact = dataInsurers.contact;
-    userWallet = dataInsurers.wallet;
-    // alert("Name: " + userName + "\nID Number: " + useridNumber + "\nContact: " + userContact + "\nWallet: " + userWallet);
-    $("#userName").text(userName);
-    $("#userID").text(useridNumber);
-    $("#userContact").text(userContact);
-    const shortenedWalletID = `${userWallet.slice(0, 8)}...${userWallet.slice(-8)}`; // Shorten text
-    $("#userWallet").text(shortenedWalletID);
-
-  } catch (error) {
-    console.error(error);
-    alert("Error fetching data. Check the console for details.")
-  }
+function getContract() {
+  let contract = new web3.eth.Contract(abi, contractAddress)
+  return contract;
 }
 
 async function getPolicyholders() {
@@ -367,7 +232,13 @@ async function getPolicyholders() {
     $("#userContact").text(userContact);
     const shortenedWalletID = `${userWallet.slice(0, 8)}...${userWallet.slice(-8)}`; // Shorten text
     $("#userWallet").text(shortenedWalletID);
-
+    if (!dataPolicyholders.isRegistered) {
+      alert("User is not registered as a policyholder.");
+    } if (dataPolicyholders.isApproved) {
+      $("#userStatus").text("Officially registered");
+    } else {
+      $("#userStatus").text("Pending approval");
+    }
   } catch (error) {
     console.error(error);
     alert("Error fetching data. Check the console for details.")
@@ -377,6 +248,8 @@ async function getPolicyholders() {
 async function getPolicyholdersPolicy() {
   let contract = getContract();
   const wallet = userAccount;
+  let policyholderPolicies = "";
+  let contractNumber = "x";
 
   if (!wallet) {
     alert("User account not found. Please make sure you are logged in.");
@@ -384,65 +257,69 @@ async function getPolicyholdersPolicy() {
   }
 
   try {
-    const dataPolicy = await contract.methods.policies(wallet).call();
-    // alert(wallet);
-    userpolicyName = dataPolicy.policyName;
-    userterms = dataPolicy.terms;
-    userpremium = dataPolicy.premium;
-    userinsurer = dataPolicy.insurer;
-    // alert("Policy Name: " + userpolicyName + "\nTerms: " + userterms + "\nPremium: " + userpremium + "\nInsurer: " + userinsurer);
-    $("#userpolicyName").text(userpolicyName);
-    $("#userterms").text(userterms);
-    $("#userpremium").text(userpremium);
-    $("#userinsurer").text(userinsurer);
+    const totalPolicy = await contract.methods.policyCount().call();
+    for (let i = 0; i < totalPolicy; i++) {
+      try {
+        policyholderPolicies = await contract.methods.policyholderPolicies(wallet,i).call();
+        contractNumber = i;
+      } catch (error) {
+      }
+    }
+    if (contractNumber != "x") {
+      const dataPolicy = await contract.methods.policies(contractNumber).call();
+      userpolicyName = dataPolicy.policyName;
+      userterms = dataPolicy.terms;
+      userpremium = dataPolicy.premium;
+      userinsurer = dataPolicy.insurer;
+      // alert("Policy Name: " + userpolicyName + "\nTerms: " + userterms + "\nPremium: " + userpremium + "\nInsurer: " + userinsurer);
+      $("#userpolicyName").text(userpolicyName);
+      $("#userterms").text(userterms);
+      $("#userpremium").text(userpremium);
+      $("#userinsurer").text(userinsurer);
 
+    } else {
+      alert("No purchased policy found for this user.");
+    }
   } catch (error) {
     console.error(error);
     alert("Error fetching data. Check the console for details.")
   }
 }
 
-async function fetchClaimsData() {
-  let contract = getContract(); // Ensure you have a function to get the contract instance
-  let claimsData = [];
-  for (let i = 1; i <= 10; i++) {
-    try {
-      const dataInsurers = await contract.methods.claims(i).call();
-      let claim = {
-        id: i,
-        Hospital: `${dataInsurers.hospital.slice(0, 8)}...${dataInsurers.hospital.slice(-8)}`,
-        // Hospital: dataInsurers.hospital,
-        Amount: dataInsurers.amount,
-        Reason: dataInsurers.reason,
-        Approved: dataInsurers.approved,
-        Processed: dataInsurers.processed
-      };
-      claimsData.push(claim);
-    } 
-    catch (error) {
-      console.error(`Error fetching data for claim ID ${i}:`, error);
-      alert("Error fetching data. Check the console for details.")
+async function fetchHospitals() {
+  let contract = getContract();
+  let hospitalAddresses = [];
+  let hospitals = [];
+  try {
+    const totalHospitals = await contract.methods.hospitalCount().call();
+    for (let i = 0; i < totalHospitals; i++) {
+      try {
+        hospitalAddresses.push(await contract.methods.hospitalAddresses(i).call());
+        hospitals.push(await contract.methods.hospitals(hospitalAddresses[i]).call());
+      } catch (error) {
+        console.error("Error fetching hospital address:", error);
+      }
     }
-  }
-  // Display the fetched data or process it as needed
-  displayClaimsData(claimsData); // Example function to display data
-}
-
-function displayClaimsData(claimsData) {
-  const claimsList = document.getElementById('claimsTable');
-  claimsData.forEach(claim => {
+  const hospitalsTable = document.getElementById('hospitalsTable');
+  hospitalsTable.innerHTML = ''; // Clear existing table rows
+  hospitals.forEach((hospital, index) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <th scope="row">${claim.id}</th>
-      <td>${claim.Hospital}</td>
-      <td>${claim.Amount}</td>
-      <td>${claim.Reason}</td>
-      <td>${claim.Approved}</td>
-      <td>${claim.Processed}</td>
+      <th scope="row">${index + 1}</th>
+      <td>${hospital.name}</td>
+      <td>${hospital.idNumber}</td>
+      <td>${hospital.contact}</td>
+      <td>${hospital.wallet}</td>
+      <td>${hospital.isApproved}</td>
     `;
-    claimsTable.appendChild(row);
+    hospitalsTable.appendChild(row);
   });
+  } catch (error) {
+    console.error("Error fetching hospitals:", error);
+    alert("An error occurred while fetching hospitals. Check console for details.");
+  }
 }
+
 
 document.addEventListener('DOMContentLoaded', async function() {
     if (window.ethereum) {
@@ -454,7 +331,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         getPolicyholders();
         getBalance();
         getPolicyholdersPolicy();
-        fetchClaimsData();
+        fetchHospitals();
       } catch (err) {
         console.error(err);
       }
@@ -465,8 +342,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       getPolicyholders();
       getBalance();
       getPolicyholdersPolicy();
-      fetchClaimsData();
+      fetchHospitals();
     } else {
       console.log('No web3? You should consider trying MetaMask!');
     }
   });
+
