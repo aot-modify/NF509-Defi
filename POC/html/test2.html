@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Management</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+      color: #4CAF50;
+    }
+
+    .dropdown {
+      text-align: center;
+      margin-bottom: 10px; /* ลดระยะห่าง */
+      display: inline-block;
+    }
+
+    .dropdown label {
+      font-size: 18px;
+      margin-right: 5px; /* ลดระยะห่างข้างๆ */
+      margin-bottom: 0; /* ลบช่องว่างด้านล่าง */
+    }
+
+    table {
+      width: 80%;
+      max-width: 1200px; 
+      border-collapse: collapse;
+      margin: 20px auto; 
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .section {
+      display: none;
+      margin-top: 20px;
+      width: 80%;
+      text-align: center;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    select {
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: #ffffff;
+      cursor: pointer;
+      width: 200px;
+      text-align: center;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    option {
+      font-size: 16px;
+    }
+
+    h2 {
+      text-align: left; /* จัดให้อยู่มุมซ้าย */
+      font-size: 24px;
+      color: black;
+      margin-bottom: 0; /* ลบช่องว่างด้านล่าง */
+      border-bottom: 2px solid black; /* เส้นข้างใต้ */
+      width: 80%; /* ให้ความยาวของเส้นข้างใต้เท่ากับความกว้างของตาราง */
+      margin-left: auto;
+      margin-right: auto; /* จัดให้ตรงกลาง */
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Dropdown for Selecting Data to Display -->
+  <div class="dropdown">
+    <label for="data-selection">Select Data to Display: </label>
+    <select id="data-selection" onchange="changeSection()">
+      <option value="hospital" selected>Hospitals</option>
+      <option value="insurer">Insurers</option>
+      <option value="policyholder">Policyholders</option>
+    </select>
+  </div>
+
+  <!-- Hospitals Table -->
+  <div id="hospital-section" class="section active">
+    <h2>Hospitals</h2>
+    <table id="hospital-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Insurances Table -->
+  <div id="insurer-section" class="section">
+    <h2>Insurances</h2>
+    <table id="insurer-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Policyholders Table -->
+  <div id="policyholder-section" class="section">
+    <h2>Policyholders</h2>
+    <table id="policyholder-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function connectToEthereum() {
+      if (typeof window.ethereum !== 'undefined') {
+        const web3 = new Web3(window.ethereum);
+
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d'; // Add your contract address
+          const contractABI = [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "role",
+              "type": "string"
+            }
+          ],
+          "name": "Approved",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "hospitalAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "insurerAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approveInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "policyholderAddress",
+              "type": "address"
+            }
+          ],
+          "name": "approvePolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "claimId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "approved",
+              "type": "bool"
+            }
+          ],
+          "name": "ClaimProcessed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "claimId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "hospital",
+              "type": "address"
+            }
+          ],
+          "name": "ClaimSubmitted",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "policyName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "terms",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "premium",
+              "type": "uint256"
+            }
+          ],
+          "name": "createPolicy",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "insurer",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "hospital",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "FundsTransferred",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "policyName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "insurer",
+              "type": "address"
+            }
+          ],
+          "name": "PolicyCreated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "policyholder",
+              "type": "address"
+            }
+          ],
+          "name": "PolicyPurchased",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "claimId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "approve",
+              "type": "bool"
+            }
+          ],
+          "name": "processClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            }
+          ],
+          "name": "purchasePolicy",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsHospital",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsInsurer",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            }
+          ],
+          "name": "registerAsPolicyholder",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "role",
+              "type": "string"
+            }
+          ],
+          "name": "Registered",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "policyId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "name": "submitClaim",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "admin",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "claimCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "claims",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "hospital",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "approved",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "processed",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAllHospitals",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "idNumber",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "contact",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "wallet",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isRegistered",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isApproved",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct InsuranceSystem.User[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAllInsurers",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "idNumber",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "contact",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "wallet",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isRegistered",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isApproved",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct InsuranceSystem.User[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getAllPolicyholders",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "idNumber",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "contact",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "wallet",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isRegistered",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "isApproved",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct InsuranceSystem.User[]",
+              "name": "",
+              "type": "tuple[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getHospitalCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getInsurerCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getPolicyholderCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "hospitalCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "hospitals",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRegistered",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isApproved",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "insurerCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "insurers",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRegistered",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isApproved",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "policies",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "policyName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "terms",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "premium",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "insurer",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "policyCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "policyholderCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "policyholders",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "contact",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "isRegistered",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isApproved",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]; // ใส่ ABI ของ Smart Contract ที่นี่
+
+      
+          const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+          // Fetch data
+          const hospitals = await contract.methods.getAllHospitals().call();
+          updateTable('hospital-table', hospitals);
+
+          const insurers = await contract.methods.getAllInsurers().call();
+          updateTable('insurer-table', insurers);
+
+          const policyholders = await contract.methods.getAllPolicyholders().call();
+          updateTable('policyholder-table', policyholders);
+        } catch (error) {
+          console.error('Error connecting to Ethereum:', error);
+        }
+      } else {
+        alert('Please install MetaMask or another Ethereum wallet.');
+      }
+    }
+
+    function updateTable(tableId, data) {
+      const tableBody = document.getElementById(tableId).querySelector('tbody');
+      tableBody.innerHTML = '';
+
+      data.forEach(item => {
+        const row = tableBody.insertRow();
+        row.innerHTML = ` 
+          <td>${item[0] || 'N/A'}</td>
+          <td>${item[1] || 'N/A'}</td>
+          <td>${item[2] || 'N/A'}</td>
+          <td>${item[3] || 'N/A'}</td>
+          <td>${item[4] ? 'Yes' : 'No'}</td>
+          <td>${item[5] ? 'Yes' : 'No'}</td>
+        `;
+      });
+    }
+
+    function changeSection() {
+      const selectedValue = document.getElementById('data-selection').value;
+      showSection(selectedValue + '-section');
+    }
+
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+
+    window.addEventListener('load', async () => {
+      await connectToEthereum();
+      showSection('hospital-section'); // Show hospital section by default
+    });
+  </script>
+</body>
+</html>
