@@ -252,7 +252,7 @@ async function loadPolicies() {
     // Fetch and display insurer details
     insurer = await contract.methods.insurers(selectedPolicy.insurer).call();
     displayInsurerDetails(insurer);
-    alert("Selected policy: " + selectedPolicy.policyName);
+    // alert("Selected policy: " + selectedPolicy.policyName);
   });
 }
 
@@ -270,6 +270,28 @@ function displayInsurerDetails(insurer) {
   $("#insurerTel").text(insurer.contact);
 }
 
+function Purchasepolicy() {
+  const contract = getContract();
+  const policiesSelect = document.getElementById('policies');
+  const selectedPolicyIndex = policiesSelect.value;
+  const selectedPolicy = window.policiesData[selectedPolicyIndex];
+  const policyId = selectedPolicyIndex;
+  const amount = selectedPolicy.premium;
+
+  contract.methods.purchasePolicy(policyId).send({ from: userAccount, value: amount })
+    .on('transactionHash', function(hash) {
+      alert('Transaction sent. Hash:', hash);
+      window.location.href = "Login2.html";
+    })
+    .on('receipt', function(receipt) {
+      alert('Transaction receipt:', receipt);
+      window.location.href = "Login2.html";
+    })
+    .on('error', function(error) {
+      alert('Transaction error:', error.message);
+      window.location.href = "Login2.html";
+    });
+}
 
 document.addEventListener('DOMContentLoaded', async function() {
   if (window.ethereum) {
