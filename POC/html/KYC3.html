@@ -1,33 +1,288 @@
-// Web3 and Smart Contract integration
-window.addEventListener('load', async () => {
-  // ตรวจสอบว่า Web3 หรือ Ethereum object ถูก inject หรือไม่
-  if (typeof window.ethereum !== 'undefined') {
-    const web3 = new Web3(window.ethereum);
-    try {
-      // ขอสิทธิ์เข้าถึงบัญชีผู้ใช้
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Management</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
 
-      // ดึงบัญชีผู้ใช้
-      const accounts = await web3.eth.getAccounts();
-      const userAccount = accounts[0];
-      
-      // ตัดทอน Wallet Address
-      const shortAddress = formatShortAddress(userAccount);
-      document.getElementById('eth_address').innerText = shortAddress;
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+      color: #2a69ac;
+    }
 
-      // ดึงข้อมูลเครือข่าย
-      const networkId = await web3.eth.net.getId();
-      const networkName = getNetworkName(networkId);
-      document.getElementById('eth_network').innerText = networkName;
+    .dropdown {
+      text-align: center;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
 
-      // เพิ่มข้อความแจ้งเตือนสำหรับเครือข่ายที่ไม่รองรับ
-      if (networkName === 'Unknown') {
-        alert('You are connected to an unsupported network. Please switch to a supported network.');
-      }
+    .dropdown label {
+      font-size: 18px;
+      margin-right: 10px;
+    }
 
-      // กำหนดค่า Smart Contract
-      const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d';
-      const contractABI = [
+    table {
+      width: 80%;
+      max-width: 1200px;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #2a69ac;
+      color: white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #eef3fc;
+    }
+
+    .section {
+      display: none;
+      margin-top: 20px;
+      width: 80%;
+      text-align: center;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    select {
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #bcd4f4;
+      background-color: #ffffff;
+      cursor: pointer;
+      width: 200px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #2a69ac;
+    }
+
+    option {
+      font-size: 16px;
+    }
+
+    h2 {
+      text-align: left;
+      font-size: 24px;
+      color: #1d4e89;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #1d4e89;
+      width: 80%;
+      margin: auto;
+    }
+
+    .control-section {
+      margin-bottom: 20px;
+      width: 80%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .control-section input {
+      padding: 12px;
+      font-size: 14px;
+      width: 500px;
+      border: 1px solid #bcd4f4;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .control-section button {
+      padding: 10px 15px;
+      font-size: 14px;
+      background-color: #2a69ac;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100px;
+    }
+
+    .control-section button:hover {
+      background-color: #1d4e89;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination button {
+      padding: 5px 10px;
+      margin: 0 5px;
+      font-size: 14px;
+      background-color: #2a69ac;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .pagination button:hover {
+      background-color: #1d4e89;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dropdown for Selecting Data to Display -->
+  <div class="dropdown">
+    <label for="data-selection">Select Data to Display: </label>
+    <select id="data-selection" onchange="changeSection()">
+      <option value="hospital" selected>Hospitals</option>
+      <option value="insurer">Insurers</option>
+      <option value="policyholder">Policyholders</option>
+    </select>
+  </div>
+
+  <!-- Hospitals Section -->
+  <div id="hospital-section" class="section active">
+    <h2>Hospitals</h2>
+    <div class="control-section">
+      <input type="text" id="hospital-address" placeholder="Enter Hospital Address">
+      <button onclick="approve('hospital')">Approve</button>
+    </div>
+    <table id="hospital-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button id="prev-hospital" onclick="prevPage('hospital')">Prev</button>
+      <button id="next-hospital" onclick="nextPage('hospital')">Next</button>
+    </div>
+  </div>
+
+  <!-- Insurers Section -->
+  <div id="insurer-section" class="section">
+    <h2>Insurers</h2>
+    <div class="control-section">
+      <input type="text" id="insurer-address" placeholder="Enter Insurer Address">
+      <button onclick="approve('insurer')">Approve</button>
+    </div>
+    <table id="insurer-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button id="prev-insurer" onclick="prevPage('insurer')">Prev</button>
+      <button id="next-insurer" onclick="nextPage('insurer')">Next</button>
+    </div>
+  </div>
+
+  <!-- Policyholders Section -->
+  <div id="policyholder-section" class="section">
+    <h2>Policyholders</h2>
+    <div class="control-section">
+      <input type="text" id="policyholder-address" placeholder="Enter Policyholder Address">
+      <button onclick="approve('policyholder')">Approve</button>
+    </div>
+    <table id="policyholder-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Contract</th>
+          <th>Wallet</th>
+          <th>Registered</th>
+          <th>Approved</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6">Loading...</td></tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button id="prev-policyholder" onclick="prevPage('policyholder')">Prev</button>
+      <button id="next-policyholder" onclick="nextPage('policyholder')">Next</button>
+    </div>
+  </div>
+
+  <script>
+    let web3;
+    let accounts;
+    let contract;
+    let hospitalData = [];
+    let insurerData = [];
+    let policyholderData = [];
+    let hospitalPage = 0;
+    let insurerPage = 0;
+    let policyholderPage = 0;
+    
+    const ITEMS_PER_PAGE = 10;
+  
+    async function connectToEthereum() {
+      if (typeof window.ethereum !== 'undefined') {
+        web3 = new Web3(window.ethereum);
+  
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          accounts = await web3.eth.getAccounts(); // Get the connected account
+          
+          const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d'; // Contract address
+          const contractABI = [
         {
           "inputs": [],
           "stateMutability": "nonpayable",
@@ -842,61 +1097,165 @@ window.addEventListener('load', async () => {
           "type": "function"
         }
       ]; // ใส่ ABI ของ Smart Contract ที่นี่
+
       
-      const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-      // ดึงจำนวน Insurer จาก Smart Contract
-      const insurerCount = await contract.methods.getInsurerCount().call();
-      console.log('Insurer Count:', insurerCount); // Debug log
-      document.getElementById('insurer-count').innerText = insurerCount;
-
-      // ดึงจำนวน Hospital จาก Smart Contract
-      const hospitalCount = await contract.methods.getHospitalCount().call();
-      console.log('Hospital Count:', hospitalCount); // Debug log
-      document.getElementById('hospital-count').innerText = hospitalCount;
-
-      // ดึงจำนวน policyholder จาก Smart Contract
-      const policyholderCount = await contract.methods.getPolicyholderCount().call();
-      console.log('policyholder Count:', policyholderCount); // Debug log
-      document.getElementById('policyholder-count').innerText = policyholderCount;
-
-    } catch (error) {
-      console.error('Error connecting to Ethereum:', error);
-      alert('Failed to connect to Ethereum. Please check your wallet and network settings.');
+      
+          contract = new web3.eth.Contract(contractABI, contractAddress);
+  
+          // Fetch data
+          hospitalData = await contract.methods.getAllHospitals().call();
+          insurerData = await contract.methods.getAllInsurers().call();
+          policyholderData = await contract.methods.getAllPolicyholders().call();
+  
+          updateTable('hospital-table', hospitalData, hospitalPage);
+          updateTable('insurer-table', insurerData, insurerPage);
+          updateTable('policyholder-table', policyholderData, policyholderPage);
+  
+          updatePaginationButtons('hospital');
+          updatePaginationButtons('insurer');
+          updatePaginationButtons('policyholder');
+  
+        } catch (error) {
+          console.error('Error connecting to Ethereum:', error);
+        }
+      } else {
+        alert('Please install MetaMask or another Ethereum wallet.');
+      }
     }
-  } else {
-    // แจ้งเตือนผู้ใช้ให้ติดตั้ง MetaMask หรือ Ethereum wallet
-    alert('Please install MetaMask or another Ethereum wallet extension.');
-  }
-});
+  
+    function updateTable(tableId, data, page) {
+      const tableBody = document.getElementById(tableId).querySelector('tbody');
+      tableBody.innerHTML = ''; // Clear the existing table content
+  
+      const start = page * ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE;
+      const pageData = data.slice(start, end);
+  
+      if (pageData.length === 0) {
+        const row = tableBody.insertRow();
+        row.innerHTML = `<td colspan="6">No more data available</td>`;
+      } else {
+        pageData.reverse().forEach(item => {  // Use reverse to show latest data on top
+          const row = tableBody.insertRow();
+          row.innerHTML = `
+            <td>${item[0] || 'N/A'}</td>
+            <td>${item[1] || 'N/A'}</td>
+            <td>${item[2] || 'N/A'}</td>
+            <td>${item[3] || 'N/A'}</td>
+            <td>${item[4] ? 'Yes' : 'No'}</td>
+            <td>${item[5] ? 'Yes' : 'No'}</td>
+          `;
+        });
+      }
+    }
+  
+    function updatePaginationButtons(type) {
+      const totalPages = getTotalPages(type);
+      const currentPage = getPage(type);
+      const prevButton = document.getElementById(`prev-${type}`);
+      const nextButton = document.getElementById(`next-${type}`);
+  
+      // Disable the "Previous" button if on the first page
+      prevButton.disabled = currentPage === 0;
+  
+      // Disable the "Next" button if on the last page
+      nextButton.disabled = currentPage >= totalPages - 1;
+    }
+  
+    function getPage(type) {
+      if (type === 'hospital') return hospitalPage;
+      if (type === 'insurer') return insurerPage;
+      if (type === 'policyholder') return policyholderPage;
+    }
+  
+    function getTotalPages(type) {
+      let data;
+      if (type === 'hospital') data = hospitalData;
+      else if (type === 'insurer') data = insurerData;
+      else if (type === 'policyholder') data = policyholderData;
+  
+      return Math.ceil(data.length / ITEMS_PER_PAGE);
+    }
+  
+    function nextPage(type) {
+      const totalPages = getTotalPages(type);
+      if (getPage(type) < totalPages - 1) {
+        if (type === 'hospital') hospitalPage++;
+        else if (type === 'insurer') insurerPage++;
+        else if (type === 'policyholder') policyholderPage++;
+  
+        updateTable(`${type}-table`, getData(type), getPage(type));
+        updatePaginationButtons(type);
+      }
+    }
+  
+    function prevPage(type) {
+      if (getPage(type) > 0) {
+        if (type === 'hospital') hospitalPage--;
+        else if (type === 'insurer') insurerPage--;
+        else if (type === 'policyholder') policyholderPage--;
+  
+        updateTable(`${type}-table`, getData(type), getPage(type));
+        updatePaginationButtons(type);
+      }
+    }
+  
+    function getData(type) {
+      if (type === 'hospital') return hospitalData;
+      if (type === 'insurer') return insurerData;
+      if (type === 'policyholder') return policyholderData;
+    }
+  
+    function changeSection() {
+      const selectedValue = document.getElementById('data-selection').value;
+      showSection(selectedValue + '-section');
+    }
+  
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
+    }
+  
+    async function approve(type) {
+      const addressInput = document.getElementById(type + '-address');
+      const address = addressInput.value.trim();
+  
+      if (!address) {
+        alert('Please enter a valid address');
+        return;
+      }
+  
+      if (contract && accounts) {
+        try {
+          let method;
+  
+          if (type === 'hospital') {
+            method = contract.methods.approveHospital(address);
+          } else if (type === 'insurer') {
+            method = contract.methods.approveInsurer(address);
+          } else if (type === 'policyholder') {
+            method = contract.methods.approvePolicyholder(address);
+          }
+  
+          // Send transaction to approve
+          await method.send({ from: accounts[0] });
+          alert(`${type.charAt(0).toUpperCase() + type.slice(1)} approved successfully!`);
+        } catch (error) {
+          console.error('Error approving:', error);
+        }
+      } else {
+        alert('Please connect to Ethereum wallet first.');
+      }
+    }
+  
+    window.addEventListener('load', async () => {
+      await connectToEthereum();
+      showSection('hospital-section'); // Show hospital section by default
+    });
+  </script>
+  
 
-// ฟังก์ชันสำหรับดึงชื่อเครือข่ายตาม Network ID
-function getNetworkName(networkId) {
-  switch (networkId) {
-    case 1:
-      return 'Mainnet';
-    case 3:
-      return 'Ropsten';
-    case 4:
-      return 'Rinkeby';
-    case 5:
-      return 'Goerli';
-    case 42:
-      return 'Kovan';
-    case 11155111:
-      return 'Sepolia';
-    case 5777:
-      return 'Ganache';
-    default:
-      return 'Unknown';
-  }
-}
-
-// ฟังก์ชันสำหรับตัดทอน Wallet Address
-function formatShortAddress(address) {
-  if (address && address.length > 10) {
-    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-  }
-  return address;
-}
-
+</body>
+</html>
