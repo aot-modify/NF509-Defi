@@ -1,121 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Contract Event Logs</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9; /* ใช้พื้นหลังฟ้าสว่าง */
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #333;
-    }
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Policies</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.1/dist/web3.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        padding: 20px;
+        display: flex;
+        justify-content: center; /* จัดให้อยู่กลางแนวนอน */
+        align-items: center;     /* จัดให้อยู่กลางแนวตั้ง */
+        height: 100vh;           /* ใช้ความสูงของหน้าจอทั้งหมด */
+        margin: 0;               /* กำจัด margin จาก browser */
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 32px;
-      color: #007BFF; /* ฟ้าคราม */
-    }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 32px; /* ทำให้หัวข้อใหญ่ขึ้น */
+        text-align: center; /* ทำให้หัวข้ออยู่กลาง */
+      }
 
-    table {
-      width: 80%;
-      max-width: 1200px;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin: 20px auto;
-      background-color: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+      /* Container for the cards */
+      .card-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px; /* เพิ่มระยะห่างด้านบนจากหัวข้อ */
+      }
 
-    th, td {
-      padding: 8px;
-      text-align: left;
-      font-size: 14px;
-    }
+      /* Style for each card */
+      .card {
+        background-color: #007BFF;
+        padding: 20px;
+        width: 250px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 250px;
+        color: white;
+        font-size: 16px; /* ทำให้ข้อความใหญ่ขึ้น */
+      }
 
-    th {
-      background-color: #007BFF;
-      color: white;
-      font-weight: bold;
-      text-align: center; /* ทำให้หัวตารางอยู่กลาง */
-    }
+      .card h3 {
+        margin: 0;
+        font-size: 18px; /* ขนาดตัวหนังสือของหัวข้อภายในการ์ด */
+        font-weight: bold;
+        word-wrap: break-word; /* ข้อความเกินจะขึ้นบรรทัดใหม่ */
+      }
 
-    td {
-      text-align: left; /* ทำให้ข้อมูลในตารางยังคงอยู่ซ้าย */
-    }
+      .card p {
+        margin: 10px 0;
+        font-size: 14px; /* ขนาดตัวหนังสือในแต่ละพารากราฟ */
+        word-wrap: break-word; /* ข้อความเกินจะขึ้นบรรทัดใหม่ */
+      }
 
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
+      .card .premium {
+        font-weight: bold;
+        color: yellow;
+        font-size: 14px; /* ทำให้ premium ใหญ่ขึ้น */
+      }
 
-    tr:hover {
-      background-color: #eef3fc;
-    }
+      /* Navigation buttons for moving between card groups */
+      .nav-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
 
-    a {
-      color: #1976D2; /* สีฟ้าเข้ม */
-      text-decoration: none;
-      font-weight: bold;
-    }
+      .nav-buttons button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 20px; /* ทำให้ปุ่มกดใหญ่ขึ้น */
+      }
 
-    a:hover {
-      text-decoration: underline; /* เพิ่ม underline เมื่อ hover ที่ลิงค์ */
-    }
+      .nav-buttons button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
 
-    .pagination {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px; /* เปลี่ยนที่ให้เว้นระยะห่างจากตาราง */
-    }
+  <body>
+    <div>
 
-    .pagination button {
-      margin: 0 5px;
-      padding: 10px 15px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+      <!-- Scrollable container for the cards -->
+      <div class="card-container" id="policy-container">
+        <!-- Cards will be inserted here -->
+      </div>
 
-    .pagination button:hover {
-      background-color: #007BFF;
-    }
-  </style>
-</head>
-<body>
+      <!-- Navigation buttons for moving between card groups -->
+      <div class="nav-buttons">
+        <button onclick="moveCards(-1)">&lt;</button>
+        <button onclick="moveCards(1)">&gt;</button>
+      </div>
+    </div>
 
-  <!-- Pagination Button อยู่ด้านบนของตาราง -->
-  <div class="pagination" id="pagination">
-    <button id="prevPage" onclick="changePage(-1)">&#60; Prev</button>
-    <button id="nextPage" onclick="changePage(1)">Next &#62;</button>
-  </div>
-
-  <div id="event-logs">Loading...</div>
-
-  <script>
-    let events = [];
-    let currentPage = 1;
-    const rowsPerPage = 10;
-
-    // Connect to Ethereum and fetch event logs
-    async function fetchEventLogs() {
-      if (typeof window.ethereum !== 'undefined') {
-        const web3 = new Web3(window.ethereum);
-        try {
-          // Request account access
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-          const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d'; // Contract Address
-          const contractABI = [
+    <script>
+      let web3;
+      let contract;
+      const contractAddress = '0x31CDf9D3AfBe06dF484411e80ef56cc8f72fAD0d'; // Replace with your contract address
+      const contractABI = [
         {
           "inputs": [],
           "stateMutability": "nonpayable",
@@ -933,97 +927,77 @@
 
       
 
-          const contract = new web3.eth.Contract(contractABI, contractAddress);
+      let policies = [];
+      let currentCardIndex = 0;
+      const cardsPerPage = 3;  // Change this to 3 cards per page
 
-          // Fetch the event logs for all events
-          events = await contract.getPastEvents('allEvents', {
-            fromBlock: 0,  // Start from block 0
-            toBlock: 'latest'  // Fetch up to the latest block
-          });
+      window.onload = async function() {
+        await connectToEthereum();
+        displayCards(); // เรียก displayCards ทันทีเมื่อโหลดหน้าเว็บ
+      }
 
-          // Display the event logs in the HTML
-          displayEventLogs();
-        } catch (error) {
-          console.error('Error fetching events:', error);
-          document.getElementById('event-logs').innerText = 'Error fetching events.';
+      async function connectToEthereum() {
+        if (typeof window.ethereum !== 'undefined') {
+          web3 = new Web3(window.ethereum);
+          try {
+            // Request account access
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+            // Create contract instance
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+
+            // Fetch total number of policies
+            const policyCount = await contract.methods.policyCount().call();
+            console.log(`Total Policies: ${policyCount}`);
+
+            // Fetch and store policies
+            for (let i = 0; i < policyCount; i++) {
+              const policy = await contract.methods.policies(i).call();
+              policies.push(policy);
+            }
+          } catch (error) {
+            console.error('Error connecting to Ethereum:', error);
+            alert('Error connecting to Ethereum. Please check your MetaMask or Ethereum wallet.');
+          }
+        } else {
+          alert('Please install MetaMask or another Ethereum wallet.');
         }
-      } else {
-        alert('Please install MetaMask or another Ethereum wallet.');
-      }
-    }
-
-    // Function to shorten the address like MetaMask
-    function shortenAddress(address) {
-      if (!address) return '';
-      return `${address.slice(0, 6)}...${address.slice(-4)}`;
-    }
-
-    function displayEventLogs() {
-      const eventLogsDiv = document.getElementById('event-logs');
-      eventLogsDiv.innerHTML = ''; // Clear existing content
-
-      if (events.length === 0) {
-        eventLogsDiv.innerText = 'No events found.';
-        return;
       }
 
-      // Sort events by blockNumber, descending (newest first)
-      events.sort((a, b) => b.blockNumber - a.blockNumber);
+      function displayCards() {
+        const cardContainer = document.getElementById('policy-container');
+        cardContainer.innerHTML = ''; // Clear previous cards
 
-      const table = document.createElement('table');
+        // Get the policies to be displayed on the current page
+        const start = currentCardIndex * cardsPerPage;
+        const end = Math.min(start + cardsPerPage, policies.length);
 
-      // Create header row first
-      const headerRow = document.createElement('tr');
-      headerRow.innerHTML = ` 
-        <th>Event Name</th>
-        <th>Address</th>
-        <th>Role</th>
-        <th>Policy ID</th>
-        <th>Claim ID</th>
-        <th>Block Number</th>
-        <th>Transaction Hash</th>
-      `;
-      table.appendChild(headerRow); // Add header row at the top
+        for (let i = start; i < end; i++) {
+          const policy = policies[i];
 
-      // Create a container for the rows of the table
-      const rowsContainer = document.createElement('tbody');
-      table.appendChild(rowsContainer);
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3>Policy ID: ${i}</h3>
+            <p><strong>Policy Name:</strong> ${policy.policyName}</p>
+            <p><strong>Terms:</strong> ${policy.terms}</p>
+            <p><strong class="premium">Premium: ${web3.utils.fromWei(policy.premium, 'ether')} ETH</strong></p>
+            <p><strong>Insurer:</strong> ${policy.insurer}</p>
+          `;
 
-      // Calculate start and end index for pagination
-      const start = (currentPage - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-      const paginatedEvents = events.slice(start, end);
+          cardContainer.appendChild(card);
+        }
+      }
 
-      // Add new rows with event data
-      paginatedEvents.forEach(event => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${event.event}</td>
-          <td>${shortenAddress(event.returnValues.user || event.returnValues.insurer || event.returnValues.policyholder || event.returnValues.hospital)}</td>
-          <td>${event.returnValues.role || ''}</td>
-          <td>${event.returnValues.policyId || ''}</td>
-          <td>${event.returnValues.claimId || ''}</td>
-          <td>${event.blockNumber}</td>
-          <td><a href="https://etherscan.io/tx/${event.transactionHash}" target="_blank">${event.transactionHash}</a></td>
-        `;
-        rowsContainer.appendChild(row);
-      });
+      function moveCards(direction) {
+        const newIndex = currentCardIndex + direction;
 
-      eventLogsDiv.appendChild(table); // Append the table to the div
-
-      // Update pagination buttons visibility
-      document.getElementById('prevPage').style.display = currentPage > 1 ? 'inline-block' : 'none';
-      document.getElementById('nextPage').style.display = currentPage * rowsPerPage < events.length ? 'inline-block' : 'none';
-    }
-
-    function changePage(direction) {
-      currentPage += direction;
-      displayEventLogs();
-    }
-
-    // Fetch the logs when the page loads
-    window.addEventListener('load', fetchEventLogs);
-  </script>
-
-</body>
+        // Ensure we stay within bounds of available policies
+        if (newIndex >= 0 && newIndex * cardsPerPage < policies.length) {
+          currentCardIndex = newIndex;
+          displayCards();
+        }
+      }
+    </script>
+  </body>
 </html>
