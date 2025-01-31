@@ -270,13 +270,15 @@ async function logIn() {
     if (citizenID === login.idNumber && login.isRegistered && login.isApproved) {
       alert("Login successful.");
       loginSuccessful = true;
-      alert(contractNumber);
-      if (contractNumber == "x") {
+      if (contractNumber == "x" && selectedTypes == "policyholders") {
         alert("You have not purchased any policy yet.");
         window.location.href = "purchasePolicy.html";
-      } else {
+      } else if (contractNumber != "x" && selectedTypes == "policyholders") {
         alert("You have purchased a policy.");
-        window.location.href = `${type.charAt(0).toUpperCase() + type.slice(1)}Dashboard.html`;
+        window.location.href = `${selectedTypes.charAt(0).toUpperCase() + selectedTypes.slice(1)}Dashboard.html`;
+      } else if (selectedTypes != "policyholders") {
+        alert("You are " + selectedTypes);
+        window.location.href = `${selectedTypes.charAt(0).toUpperCase() + selectedTypes.slice(1)}Dashboard.html`;
       }
     } else if (citizenID == login.idNumber && login.isRegistered && !login.isApproved) {
       alert("Login failed.\nAwaiting approval.");
