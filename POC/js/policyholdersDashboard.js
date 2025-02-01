@@ -320,6 +320,27 @@ async function fetchHospitals() {
   }
 }
 
+function searchTable() {
+  var input, filter, table, tr, td, i, j, txtValue;
+  input = document.getElementById("searchHospital");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("hospitalsTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+      tr[i].style.display = "none"; // Hide all rows initially
+      td = tr[i].getElementsByTagName("td");
+      for (j = 0; j < td.length; j++) {
+          if (td[j]) {
+              txtValue = td[j].textContent || td[j].innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  tr[i].style.display = ""; // Show the row if match is found
+                  break;
+              }
+          }
+      }
+  }
+}
 
 document.addEventListener('DOMContentLoaded', async function() {
     if (window.ethereum) {
