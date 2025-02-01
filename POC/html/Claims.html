@@ -197,7 +197,7 @@
                     try {
                         let policyId = await contract.methods.policyholderPolicies(walletAddress, i).call();
 
-                        if (policyId !== "0") {
+                        if (policyId !== "-1") {
                             let policyData = await contract.methods.policies(policyId).call();
                             policiesFound = true;
 
