@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"> -->
+    <!-- <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="web3.js"></script>
+    <script src="PurchasePolicy.js"></script>
+  </head>
+  <body>
+
+    <div class="row bg-primary p-3 text-bg-primary fs-3 shadow">
+      <div class="col-4 text-start">
+        <span id="eth_network"></span> network
+      </div>
+      <div class="col-7"></div>
+      <div class="col-1 text-end" style="height: 45px;">
+        <a class="icon-link" href="javascript:openContractOnEtherScan();">
+          <img src="https://cdn-icons-png.flaticon.com/128/6229/6229280.png" alt="" height="50px;">
+        </a>
+      </div>
+    </div>
+    
+    <!-- <button type="Login" class="btn btn-primary text-center" style="width: 100px;" 
+     onclick="getInsurerData()">
+      Test
+    </button> -->
+
+    <div class="container d-flex justify-content-center align-items-center mt-5">
+      <div class="row p-3 border rounded-5 bg-primary text-bg-primary bg-gradient shadow" style="width: 1000px;">
+        <div class="row-fluid text-center mt-2 fs-2 fw-bold">Secure Your Future Today!!</div>
+        <div class="row-fluid mt-5 text-start fs-4 fw-bold">Select your plan</div>
+        <div class="mt-2" style="font-size: 14px;">
+
+          <select class="form-select" aria-label="" id="policies" style="width: 300px;">
+            <option selected>Policy</option>
+          </select>
+
+          <div id="policyDetails" class="mt-4 fs-6 fw-bold">
+            <div class="row mt-2">
+              <div class="col-auto">Plan Type: </div>
+              <div class="col-9"><span id="userpolicyName"></span></div>
+            </div>
+          <div class="row mt-2 ">
+              <div class="col-auto">Terms: </div>
+              <div class="col-9"><span id="userterms"></span></div>
+          </div>
+          <div class="row mt-2">
+              <div class="col-auto">User premium(Wei):</div>
+              <div class="col-9"><span id="userpremium"></span></div>
+          </div>
+          <div class="row mt-2">
+              <div class="col-auto">Insurer wallet:</div>
+              <div class="col-9"><span id="insurerWallet"></span></div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-auto">Insurer name:</div>
+            <div class="col-9"><span id="insurerName"></span></div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-auto">Insurer ID:</div>
+            <div class="col-9"><span id="insurerID"></span></div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-auto">Insurer telephone number:</div>
+            <div class="col-9"><span id="insurerTel"></span></div>
+          </div>
+
+        </div>
+        <div class="row-fluid m-2 fw-bold text-center" style="color: red;">
+          <span id="warning"></span>
+        </div>
+        <div class="row d-flex justify-content-center mt-5 mb-2">
+          <button type="Purchase" class="btn btn-light shadow" style="width: 100px;" onclick="Purchasepolicy()">
+            Purchase
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
